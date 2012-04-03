@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 		Station caseCourante;
 		int taille;
 		Station depart;
+		ArrayList<Station> dejapassé;
 		
 		public AlgoRechercheChemin(ArrayList<Station> chemin,
 				ArrayList<ArrayList<Station>> solutions, Station stationCourante,
@@ -21,6 +22,7 @@ import java.util.Map.Entry;
 			this.caseCourante = stationCourante;
 			this.taille = taille;
 			this.depart = depart;
+			dejapassé = new ArrayList<Station>();
 		}
 
 
@@ -31,17 +33,23 @@ import java.util.Map.Entry;
 			Station d = depart;
 			Station nouvelle = CoordonneeCou;
 			Station ancienne = precedente;
-			//System.out.println(nouvelle.getNom());
-			//System.out.println(ancienne.getNom());
+			dejapassé.add(nouvelle);
+			System.out.println(nouvelle.getNom());
+			//System.out.println(fin.getNom());
 			if(d!=nouvelle && nouvelle==fin){
+				System.out.println("fin");
 				s.add(c);
+				dejapassé.clear();
 			}else{
 				for(Entry<Station,Integer> e : nouvelle.getTemps_vers_station_voisine().entrySet()){
+					//System.out.println(e.getKey().getNom());
 					ancienne = nouvelle;
 					nouvelle = e.getKey();
 					c.add(nouvelle);
+					if(!dejapassé.contains(nouvelle))
 					Tous_Les_Chemins(c,s,nouvelle,t,ancienne,fin);
-					//c.remove(nouvelle);
+					c.remove(nouvelle);
+					
 				}	
 				}
 			}
