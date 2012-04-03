@@ -38,6 +38,7 @@ public class TerminalMobile {
 		}
 		
 		System.out.println("ANTHO");
+		System.out.println("BOUBOU");
 	}
 
 }
