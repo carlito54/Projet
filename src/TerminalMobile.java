@@ -36,6 +36,8 @@ public class TerminalMobile {
 			jp.add(jb);
 		
 		}
+		
+		System.out.println("ANTHO");
 	}
 
 }
