@@ -22,4 +22,13 @@ public class Coordonnee {
 		public void setY(int y) {
 			this.y = y;
 		}	
+
+		// faire fonction recherche station plus prche ( coordonnées, tableau de stations)
+		//retourne  sation la plus proche
+
+
+
 	}
+
+
+
