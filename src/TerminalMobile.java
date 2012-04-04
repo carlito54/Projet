@@ -1,36 +1,26 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Paint;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Map.Entry;
-import java.awt.Dimension;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.RepaintManager;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.text.TabExpander;
 
 
 public class TerminalMobile {
+
 
 	public static void main(String[] args) {
 		JFrame jf = new JFrame();
@@ -40,7 +30,7 @@ public class TerminalMobile {
 		jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		jf.setLocation(200,50);
 		jf.setVisible(true);
-		Graphics g;
+		jf.setResizable(false);
 		Station[] lestation = new Station[15];
 		
 		/** Création des stations et des lignes voisines de chque station **/
@@ -137,50 +127,48 @@ public class TerminalMobile {
 		lestation[14].setTemps_vers_station_voisine(voisin14);
 		
 		JButton[] tableaubutton = new JButton[15];
-		
-		
-		for (int i = 0; i < 15; i++) {
-			//JButton jb = new JButton(lestation[i].getNom());
-			JButton jb = new JButton(new ImageIcon("station.gif"));
-			String nom = lestation[i].getNom();
-			JLabel jl = new JLabel(nom,SwingConstants.CENTER);
-			jb.setBorderPainted(false);
-			jb.setFocusPainted(false);
-			jb.setContentAreaFilled(false);
-			jb.setOpaque(false);
-			jb.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-			jp.setLayout(null);
-			jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),30,30);
-			jp.add(jb);
-			jp.setLayout(null);
-			jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
-			int x = lestation[i].getCoordonnee_station().getX() - 22;
-			int y = lestation[i].getCoordonnee_station().getY() + 60;
-			jl.setBounds(x,y, 100, 15);
-			//g = jp;
-			
-			//g = jp.getGraphics();
-			//g.fillRect(lestation[i].getCoordonnee_station().getX(), lestation[i].getCoordonnee_station().getY(), 0, 0);
-	        //jp.paintComponents(g);	
-			jp.add(jb);
-			jp.add(jl);
-			tableaubutton[i] = jb;
-		}
-		g = jp.getGraphics();
-		for (int i = 0; i < tableaubutton.length; i++) {
-			for(Entry<Station,Integer> e : lestation[i].getTemps_vers_station_voisine().entrySet()){
-				g.drawLine(lestation[i].getCoordonnee_station().getX()+30, lestation[i].getCoordonnee_station().getY()+30,e.getKey().getCoordonnee_station().getX()+30, e.getKey().getCoordonnee_station().getY()+30);
+		Graphics g;
+			for (int i = 0; i < 15; i++) {
+				//JButton jb = new JButton(lestation[i].getNom());
+				JButton jb = new JButton(new ImageIcon("station.gif"));
+				String nom = lestation[i].getNom();
+				JLabel jl = new JLabel(nom,SwingConstants.CENTER);
+				jb.setBorderPainted(false);
+				jb.setFocusPainted(false);
+				jb.setContentAreaFilled(false);
+				jb.setOpaque(false);
+				jb.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+				jp.setLayout(null);
+				jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),30,30);
+				jp.add(jb);
+				jp.setLayout(null);
+				jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
+				int x = lestation[i].getCoordonnee_station().getX() - 22;
+				int y = lestation[i].getCoordonnee_station().getY() + 60;
+				jl.setBounds(x,y, 100, 15);
+				//g = jp;
+				
+				//g = jp.getGraphics();
+				//g.fillRect(lestation[i].getCoordonnee_station().getX(), lestation[i].getCoordonnee_station().getY(), 0, 0);
+		        //jp.paintComponents(g);	
+				jp.add(jb);
+				jp.add(jl);
+				tableaubutton[i] = jb;
 			}
-		}
-		jp.paintComponents(g);
+			g = jp.getGraphics();
+			for (int i = 0; i < tableaubutton.length; i++) {
+				for(Entry<Station,Integer> e : lestation[i].getTemps_vers_station_voisine().entrySet()){
+					g.drawLine(lestation[i].getCoordonnee_station().getX()+30, lestation[i].getCoordonnee_station().getY()+30,e.getKey().getCoordonnee_station().getX()+30, e.getKey().getCoordonnee_station().getY()+30);
+				}
+			}
+			jp.paintComponents(g);
 		
-		
+
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
-		//AlgoRechercheChemin algo= new AlgoRechercheChemin(chemin, solutions, lestation[0], 1, lestation[0]);
-		//algo.Tous_Les_Chemins(chemin, solutions, lestation[0], 1, lestation[0],lestation[3]);
 		AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
-		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);	
+		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
+		
 		for (ArrayList<Station> a : solutions) {
 			//System.out.println("Solution :");
 			for (Station station : a) {
@@ -198,8 +186,8 @@ public class TerminalMobile {
 			}
 		}
 		
-		
-		
+
+
 	}
 
 }
