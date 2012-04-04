@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
@@ -36,36 +37,32 @@ import java.util.Map.Entry;
 				}						
 			}
 		}
-	}
-			
-			
-			/*Station d = depart;
-			Station nouvelle = CoordonneeCou;
-			Station ancienne = precedente;
-			dejapassé.add(nouvelle);
-			System.out.println("Ancienne "+ancienne.getNom());
-
-			System.out.println("Nouvelle "+nouvelle.getNom());
-			//System.out.println(fin.getNom());
-			if(d!=nouvelle && nouvelle==fin &&!c.contains(nouvelle)){
-				System.out.println("fin");
-				s.add(c);
-				dejapassé.clear();
-			}else{
-				for(Entry<Station,Integer> e : nouvelle.getTemps_vers_station_voisine().entrySet()){
-					//System.out.println(e.getKey().getNom());
-					ancienne = nouvelle;
-					nouvelle = e.getKey();
-					//nouvelle = new Station(e.getKey().getTempsarret(),e.getKey().getNom(),e.getKey().getTemps_vers_station_voisine(), e.getKey().getCoordonnee_station(),e.getKey().getLigne());
-					//System.out.println(nouvelle.getNom());
-					c.add(nouvelle);
-					//if(!dejapassé.contains(nouvelle))
-					Tous_Les_Chemins(c,s,nouvelle,t,ancienne,fin);
-					c.remove(nouvelle);
-					
-				}	
+		
+		public ArrayList<Station> cheminPlusRapide(ArrayList<ArrayList<Station>> stations){
+			ArrayList<Station> res = new ArrayList<Station>();
+			int tempstotal=10000;
+			int temp;
+			for (ArrayList<Station> a : stations) {
+				temp=tempsChemin(a);
+				if(temp<tempstotal){
+					tempstotal=temp;
+					res=a;
 				}
-			}*/
+			}
+			return res;
+		}
+		
+		public int tempsChemin(ArrayList<Station> chemin){
+			int tempstotal=0;
+			for (Station station : chemin) {
+				tempstotal += station.getTempsarret();
+			}
+			return tempstotal;
+		}
+}
+			
+			
+	
 
 
 
