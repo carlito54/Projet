@@ -54,10 +54,21 @@ import java.util.Map.Entry;
 		
 		public int tempsChemin(ArrayList<Station> chemin){
 			int tempstotal=0;
+			int tempsentrestation=0;
+			Station temp=null;
 			for (Station station : chemin) {
+				tempsentrestation+=tempsEntreStation(temp,station);
+				temp=station;
 				tempstotal += station.getTempsarret();
 			}
-			return tempstotal;
+			return (tempstotal+tempsentrestation);
+		}
+		
+		//retourne le temps mis entre 2 stations
+		public int tempsEntreStation(Station debut,Station fin){
+			if (debut==null || fin==null)return 0;
+			else if(debut==fin) return 0;
+			else return debut.getTemps_vers_station_voisine().get(fin);
 		}
 }
 			
