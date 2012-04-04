@@ -27,7 +27,7 @@ public class TerminalMobile {
 		jf.setSize(new Dimension(900,700));
 		jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		jf.setLocation(200,50);
-		jf.setVisible(true);
+		//jf.setVisible(true);
 		
 		Station[] lestation = new Station[15];
 		
@@ -137,7 +137,6 @@ public class TerminalMobile {
 		
 		
 		jp.addMouseListener(new MouseListener() {
-
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}
@@ -152,7 +151,7 @@ public class TerminalMobile {
 		AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
 		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
 		
-		System.out.println(algo.cheminPlusRapide(solutions));
+		//le temps le plus rapide entre la station 0 et 10 est de 1010
 		
 		for (Station station : algo.cheminPlusRapide(solutions)) {
 			//System.out.println("res"+station.getNom());
