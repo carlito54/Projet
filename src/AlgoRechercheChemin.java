@@ -34,7 +34,7 @@ import java.util.Map.Entry;
 			Station nouvelle = CoordonneeCou;
 			Station ancienne = precedente;
 			dejapassé.add(nouvelle);
-			System.out.println(nouvelle.getNom());
+			//System.out.println(nouvelle.getNom());
 			//System.out.println(fin.getNom());
 			if(d!=nouvelle && nouvelle==fin){
 				System.out.println("fin");
@@ -45,8 +45,9 @@ import java.util.Map.Entry;
 					//System.out.println(e.getKey().getNom());
 					ancienne = nouvelle;
 					nouvelle = e.getKey();
+					System.out.println(nouvelle.getNom());
 					c.add(nouvelle);
-					if(!dejapassé.contains(nouvelle))
+					//if(!dejapassé.contains(nouvelle))
 					Tous_Les_Chemins(c,s,nouvelle,t,ancienne,fin);
 					c.remove(nouvelle);
 					

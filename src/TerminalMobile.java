@@ -63,7 +63,7 @@ public class TerminalMobile {
 		
 		voisin1.put(lestation[2], 35);
 		voisin1.put(lestation[0], 35);
-		voisin1.put(lestation[6], 35);
+		//voisin1.put(lestation[6], 35);
 		voisin1.put(lestation[8], 35);
 		lestation[1].setTemps_vers_station_voisine(voisin1);
 
@@ -132,7 +132,7 @@ public class TerminalMobile {
 		for (ArrayList<Station> a : solutions) {
 			//System.out.println("yop");
 			for (Station station : a) {
-				//System.out.println("res"+station.getNom());
+				System.out.println("res"+station.getNom());
 			}
 		}
 		
