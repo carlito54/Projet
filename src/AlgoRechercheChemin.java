@@ -5,36 +5,19 @@ import java.util.Map.Entry;
 
 
 	public class AlgoRechercheChemin {
-		
-		ArrayList<Station> chemin;
-		ArrayList<ArrayList<Station>> solutions;
-		Station caseCourante;
-		int taille;
+
 		Station depart;
-		ArrayList<Station> dejapassé;
 		
-		public AlgoRechercheChemin(ArrayList<Station> chemin,
-				ArrayList<ArrayList<Station>> solutions, Station stationCourante,
-				int taille, Station depart) {
-			super();
-			this.chemin = chemin;
-			this.solutions = solutions;
-			this.caseCourante = stationCourante;
-			this.taille = taille;
+		public AlgoRechercheChemin(Station depart) {
 			this.depart = depart;
-			dejapassé = new ArrayList<Station>();
 		}
 
 
-		
-
-		
 		public void Tous_Les_Chemins(ArrayList<Station> c,ArrayList<ArrayList<Station>> s,Station CoordonneeCou,Station fin){
 			Coordonnee d = depart.getCoordonnee_station();
 			Coordonnee nouvelle = CoordonneeCou.getCoordonnee_station();
 			Station nouv = CoordonneeCou;
 			Coordonnee finale = fin.getCoordonnee_station();
-			boolean res = false;
 			int x=nouvelle.getX();
 			int y=nouvelle.getY();
 			

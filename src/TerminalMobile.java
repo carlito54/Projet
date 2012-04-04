@@ -29,6 +29,7 @@ public class TerminalMobile {
 		
 		Station[] lestation = new Station[15];
 		
+		/** Création des stations et des lignes voisines de chque station **/
 		lestation[0] = new Station((int)(Math.random()*60),"La Défense",null,new Coordonnee(50,450),1);
 		lestation[1] = new Station((int)(Math.random()*60),"Rome",null,new Coordonnee(150,450),4);
 		lestation[2] = new Station((int)(Math.random()*60),"Neuilly",null,new Coordonnee(325,450),1);
@@ -129,13 +130,14 @@ public class TerminalMobile {
 			jp.add(jb);
 			tableaubutton[i] = jb;
 		}
+		
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
-		AlgoRechercheChemin algo= new AlgoRechercheChemin(chemin, solutions, lestation[0], 1, lestation[0]);
+		AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
 		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
 		
 		for (ArrayList<Station> a : solutions) {
-			System.out.println("Solution :");
+			//System.out.println("Solution :");
 			for (Station station : a) {
 				//System.out.println("res"+station.getNom());
 				for (int i = 0; i < tableaubutton.length; i++) {
