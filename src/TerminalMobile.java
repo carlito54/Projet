@@ -1,8 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
@@ -10,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import javax.swing.text.TabExpander;
 
 
 public class TerminalMobile {
@@ -63,8 +66,8 @@ public class TerminalMobile {
 		
 		voisin1.put(lestation[2], 35);
 		voisin1.put(lestation[0], 35);
-		//voisin1.put(lestation[6], 35);
-		voisin1.put(lestation[8], 35);
+		voisin1.put(lestation[6], 35);
+		voisin1.put(lestation[7], 35);
 		lestation[1].setTemps_vers_station_voisine(voisin1);
 
 		voisin2.put(lestation[3], 35);
@@ -80,6 +83,7 @@ public class TerminalMobile {
 		lestation[4].setTemps_vers_station_voisine(voisin4);
 		
 		voisin5.put(lestation[4], 35);
+		voisin5.put(lestation[14], 35);
 		lestation[5].setTemps_vers_station_voisine(voisin5);
 		
 		voisin6.put(lestation[1], 35);
@@ -97,7 +101,7 @@ public class TerminalMobile {
 		
 		voisin9.put(lestation[8], 35);
 		voisin9.put(lestation[10], 35);
-		lestation[9].setTemps_vers_station_voisine(voisin8);
+		lestation[9].setTemps_vers_station_voisine(voisin9);
 		
 		voisin10.put(lestation[9], 35);
 		lestation[10].setTemps_vers_station_voisine(voisin10);
@@ -117,22 +121,33 @@ public class TerminalMobile {
 		voisin14.put(lestation[8], 35);
 		lestation[14].setTemps_vers_station_voisine(voisin14);
 		
+		JButton[] tableaubutton = new JButton[15];
 		for (int i = 0; i < 15; i++) {
 			JButton jb = new JButton(lestation[i].getNom());
 			jp.setLayout(null);
 			jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
 			jp.add(jb);
-		
+			tableaubutton[i] = jb;
 		}
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
 		AlgoRechercheChemin algo= new AlgoRechercheChemin(chemin, solutions, lestation[0], 1, lestation[0]);
-		algo.Tous_Les_Chemins(chemin, solutions, lestation[0], 1, lestation[0],lestation[3]);
+		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
 		
 		for (ArrayList<Station> a : solutions) {
-			//System.out.println("yop");
+			System.out.println("Solution :");
 			for (Station station : a) {
-				System.out.println("res"+station.getNom());
+				//System.out.println("res"+station.getNom());
+				for (int i = 0; i < tableaubutton.length; i++) {
+					if(tableaubutton[i].getText().compareTo(station.getNom())==0){
+						tableaubutton[i].setBackground(Color.blue);
+					}
+				}
+			}
+			Scanner sc = new Scanner(System.in);
+			sc.next();
+			for (int i = 0; i < tableaubutton.length; i++) {
+					tableaubutton[i].setBackground(null);
 			}
 		}
 		
