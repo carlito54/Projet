@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -150,10 +151,11 @@ public class TerminalMobile {
 		//le temps le plus rapide entre la station 0 et 10 est de 1010
 		
 		for (Station station : algo.cheminPlusRapide(solutions)) {
-			//System.out.println("res"+station.getNom());
+			System.out.println("res"+station.getNom());
 			for (int i = 0; i < tableaubutton.length; i++) {
 				if(tableaubutton[i].getText().compareTo(station.getNom())==0){
-					tableaubutton[i].setBackground(Color.blue);
+					System.out.println("lol");
+					tableaubutton[i].setIcon(new ImageIcon("station_check.gif"));
 				}
 			}
 		}
