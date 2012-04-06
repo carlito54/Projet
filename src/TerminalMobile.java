@@ -25,16 +25,10 @@ public class TerminalMobile {
 
 
 	public static void main(String[] args) {
-		JFrame jf = new JFrame();
-		JPanel jp = new JPanel();
-		jf.add(jp);
-		jf.setSize(new Dimension(900,700));
-		jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		jf.setLocation(200,50);
-		jf.setVisible(true);
-		jf.setResizable(false);
-		jf.setVisible(true);
-			Station[] lestation = new Station[15];
+	
+		Affichage affichage = new Affichage();
+		
+		Station[] lestation = new Station[15];
 		
 		/** Création des stations et des lignes voisines de chque station **/
 		lestation[0] = new Station(30,"La Défense",null,new Coordonnee(50,450),1);
@@ -131,60 +125,21 @@ public class TerminalMobile {
 		
 		//On affiche les stations dans un Jpanel
 		JButton[] tableaubutton = new JButton[15];
-		Graphics g;
-			for (int i = 0; i < 15; i++) {
-				//JButton jb = new JButton(lestation[i].getNom());
-				JButton jb = new JButton(new ImageIcon("station.gif"));
-				String nom = lestation[i].getNom();
-				JLabel jl = new JLabel(nom,SwingConstants.CENTER);
-				jb.setBorderPainted(false);
-				jb.setFocusPainted(false);
-				jb.setContentAreaFilled(false);
-				jb.setOpaque(false);
-				jb.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-				jp.setLayout(null);
-				jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),30,30);
-				jp.add(jb);
-				jp.setLayout(null);
-				jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
-				int x = lestation[i].getCoordonnee_station().getX() - 22;
-				int y = lestation[i].getCoordonnee_station().getY() + 60;
-				jl.setBounds(x,y, 100, 15);
-				//g = jp;
-				
-				//g = jp.getGraphics();
-				//g.fillRect(lestation[i].getCoordonnee_station().getX(), lestation[i].getCoordonnee_station().getY(), 0, 0);
-		        //jp.paintComponents(g);	
-				jp.add(jb);
-				jp.add(jl);
-				tableaubutton[i] = jb;
-			}
-			g = jp.getGraphics();
-			for (int i = 0; i < tableaubutton.length; i++) {
-				for(Entry<Station,Integer> e : lestation[i].getTemps_vers_station_voisine().entrySet()){
-					g.drawLine(lestation[i].getCoordonnee_station().getX()+30, lestation[i].getCoordonnee_station().getY()+30,e.getKey().getCoordonnee_station().getX()+30, e.getKey().getCoordonnee_station().getY()+30);
-				}
-			}
-			jp.paintComponents(g);
-		for (int i = 0; i < 15; i++) {
-			JButton jb = new JButton(lestation[i].getNom());
-			jp.setLayout(null);
-			jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
-			jp.add(jb);
-			tableaubutton[i] = jb;
-		}
+		tableaubutton = affichage.plan(lestation);
+		affichage.paint(affichage.getJp().getGraphics(), tableaubutton, lestation);
+
 		//** TODO Tracé ligne entre station
 		
 		
-		jp.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseClicked(MouseEvent e) {
-				System.out.println(e.getX());
-			}
-		});
+//		jp.addMouseListener(new MouseListener() {
+//			public void mouseReleased(MouseEvent e) {}
+//			public void mousePressed(MouseEvent e) {}
+//			public void mouseExited(MouseEvent e) {}
+//			public void mouseEntered(MouseEvent e) {}
+//			public void mouseClicked(MouseEvent e) {
+//				System.out.println(e.getX());
+//			}
+//		});
 		
 
 		ArrayList<Station> chemin = new ArrayList<Station>();
