@@ -27,7 +27,7 @@ public class TerminalMobile {
 		jf.setSize(new Dimension(900,700));
 		jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		jf.setLocation(200,50);
-		//jf.setVisible(true);
+		jf.setVisible(true);
 		
 		Station[] lestation = new Station[15];
 		
