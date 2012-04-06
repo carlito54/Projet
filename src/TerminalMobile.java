@@ -18,6 +18,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Popup;
 import javax.swing.SwingConstants;
@@ -30,7 +31,7 @@ public class TerminalMobile {
 
 	public static void main(String[] args) {
 		JFrame jf = new JFrame();
-		JPanel jp = new JPanel();
+		final JPanel jp = new JPanel();
 		jf.add(jp);
 		jf.setSize(new Dimension(900,700));
 		jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -185,7 +186,7 @@ public class TerminalMobile {
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
 		final AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
-		Station depart,arrive;
+		
 		/*algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
 		//le temps le plus rapide entre la station 0 et 10 est de 1010
 		
@@ -197,18 +198,18 @@ public class TerminalMobile {
 				}
 			}
 		}*/
+			jp.addMouseListener(new MouseListener() {
+				public void mouseReleased(MouseEvent e) {}
+				public void mousePressed(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseClicked(MouseEvent e) {
+					tableaubutton[algo.proche(e.getX(),e.getY(),lestation)].setBackground(Color.blue);
+				
+				}
+			});
 
-		final JCheckBox jc = new JCheckBox();
-		jp.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseClicked(MouseEvent e) {
-				tableaubutton[algo.proche(e.getX(),e.getY(),lestation)].setBackground(Color.blue);
-				jc.show();
-			}
-		});
+		
 		
 	}
 	
