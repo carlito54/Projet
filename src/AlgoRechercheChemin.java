@@ -70,6 +70,31 @@ import java.util.Map.Entry;
 			else if(debut==fin) return 0;
 			else return debut.getTemps_vers_station_voisine().get(fin);
 		}
+		
+		public double distance(int x, int y, Station s){
+	        int longueur=s.getCoordonnee_station().getX()-x;
+	        int hauteur=s.getCoordonnee_station().getY()-y;
+	        double dist=Math.sqrt((longueur*longueur)+(hauteur*hauteur));
+	        return dist;
+	    }
+	   
+	    public int proche(int x,int y,Station[] lestation){
+	        double res;
+	        double min = 10000;
+	        String nom="aucune station";
+	        int indicestation=0;
+	        for (int i = 0; i < lestation.length; i++){
+	            if(lestation[i].getCoordonnee_station()!=null){
+	                res =distance(x,y,lestation[i]);
+	                if (res<min){
+	                    nom =lestation[i].getNom();
+	                    min=res;
+	                    indicestation=i;
+	                }
+	            }
+	        }
+	        return indicestation;
+	    }
 }
 			
 			

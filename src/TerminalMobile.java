@@ -34,7 +34,7 @@ public class TerminalMobile {
 		jf.setVisible(true);
 		jf.setResizable(false);
 		jf.setVisible(true);
-			Station[] lestation = new Station[15];
+			final Station[] lestation = new Station[15];
 		
 		/** Création des stations et des lignes voisines de chque station **/
 		lestation[0] = new Station(30,"La Défense",null,new Coordonnee(50,450),1);
@@ -130,7 +130,7 @@ public class TerminalMobile {
 		lestation[14].setTemps_vers_station_voisine(voisin14);
 		
 		//On affiche les stations dans un Jpanel
-		JButton[] tableaubutton = new JButton[15];
+		final JButton[] tableaubutton = new JButton[15];
 		Graphics g;
 			for (int i = 0; i < 15; i++) {
 				//JButton jb = new JButton(lestation[i].getNom());
@@ -175,21 +175,12 @@ public class TerminalMobile {
 		}
 		//** TODO Tracé ligne entre station
 		
-		
-		jp.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseClicked(MouseEvent e) {
-				System.out.println(e.getX());
-			}
-		});
+	
 		
 
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
-		AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
+		final AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
 		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
 		
 		//le temps le plus rapide entre la station 0 et 10 est de 1010
@@ -198,7 +189,7 @@ public class TerminalMobile {
 			//System.out.println("res"+station.getNom());
 			for (int i = 0; i < tableaubutton.length; i++) {
 				if(tableaubutton[i].getText().compareTo(station.getNom())==0){
-					tableaubutton[i].setBackground(Color.blue);
+					//tableaubutton[i].setBackground(Color.blue);
 				}
 			}
 		}
@@ -218,6 +209,17 @@ public class TerminalMobile {
 					tableaubutton[i].setBackground(null);
 			}
 		}*/
+		
+		
+		jp.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				tableaubutton[algo.proche(e.getX(),e.getY(),lestation)].setBackground(Color.blue);
+			}
+		});
 		
 	}
 	

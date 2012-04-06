@@ -67,5 +67,5 @@ public class Station {
 	public void setCoordonnee_station(Coordonnee coordonneeStation) {
 		coordonnee_station = coordonneeStation;
 	}
-	
+		
 }
