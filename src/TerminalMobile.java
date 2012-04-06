@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.PopupMenu;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -13,9 +14,12 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Popup;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.text.TabExpander;
@@ -181,8 +185,8 @@ public class TerminalMobile {
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
 		final AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
-		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
-		
+		Station depart,arrive;
+		/*algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
 		//le temps le plus rapide entre la station 0 et 10 est de 1010
 		
 		for (Station station : algo.cheminPlusRapide(solutions)) {
@@ -192,25 +196,9 @@ public class TerminalMobile {
 					//tableaubutton[i].setBackground(Color.blue);
 				}
 			}
-		}
-		/*for (ArrayList<Station> a : solutions) {
-			//System.out.println("Solution :");
-			for (Station station : a) {
-				//System.out.println("res"+station.getNom());
-				for (int i = 0; i < tableaubutton.length; i++) {
-					if(tableaubutton[i].getText().compareTo(station.getNom())==0){
-						tableaubutton[i].setBackground(Color.blue);
-					}
-				}
-			}
-			Scanner sc = new Scanner(System.in);
-			sc.next();
-			for (int i = 0; i < tableaubutton.length; i++) {
-					tableaubutton[i].setBackground(null);
-			}
 		}*/
-		
-		
+
+		final JCheckBox jc = new JCheckBox();
 		jp.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
@@ -218,6 +206,7 @@ public class TerminalMobile {
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
 				tableaubutton[algo.proche(e.getX(),e.getY(),lestation)].setBackground(Color.blue);
+				jc.show();
 			}
 		});
 		
