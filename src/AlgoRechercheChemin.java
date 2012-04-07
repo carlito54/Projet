@@ -55,11 +55,15 @@ import java.util.Map.Entry;
 		public int tempsChemin(ArrayList<Station> chemin){
 			int tempstotal=0;
 			int tempsentrestation=0;
+			int count = 1;
 			Station temp=null;
 			for (Station station : chemin) {
 				tempsentrestation+=tempsEntreStation(temp,station);
 				temp=station;
-				tempstotal += station.getTempsarret();
+				if (count != chemin.size()) {
+					tempstotal += station.getTempsarret();
+				}
+				count ++;
 			}
 			return (tempstotal+tempsentrestation);
 		}
