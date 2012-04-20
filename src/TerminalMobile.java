@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.PopupMenu;
@@ -178,7 +179,6 @@ public class TerminalMobile {
 			jp.add(jb);
 			tableaubutton[i] = jb;
 		}
-		//** TODO Tracé ligne entre station
 		
 	
 		
@@ -198,6 +198,7 @@ public class TerminalMobile {
 				}
 			}
 		}*/
+
 			jp.addMouseListener(new MouseListener() {
 				public void mouseReleased(MouseEvent e) {}
 				public void mousePressed(MouseEvent e) {}
@@ -205,7 +206,6 @@ public class TerminalMobile {
 				public void mouseEntered(MouseEvent e) {}
 				public void mouseClicked(MouseEvent e) {
 					tableaubutton[algo.proche(e.getX(),e.getY(),lestation)].setBackground(Color.blue);
-				
 				}
 			});
 
