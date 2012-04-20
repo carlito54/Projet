@@ -31,15 +31,9 @@ public class TerminalMobile {
 
 
 	public static void main(String[] args) {
-		JFrame jf = new JFrame();
-		final JPanel jp = new JPanel();
-		jf.add(jp);
-		jf.setSize(new Dimension(900,700));
-		jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		jf.setLocation(200,50);
-		jf.setVisible(true);
-		jf.setResizable(false);
-		jf.setVisible(true);
+		
+	
+		
 			final Station[] lestation = new Station[15];
 		
 		/** Création des stations et des lignes voisines de chque station **/
@@ -135,50 +129,16 @@ public class TerminalMobile {
 		voisin14.put(lestation[8], 310);
 		lestation[14].setTemps_vers_station_voisine(voisin14);
 		
-		//On affiche les stations dans un Jpanel
-		final JButton[] tableaubutton = new JButton[15];
-		Graphics g;
-			for (int i = 0; i < 15; i++) {
-				//JButton jb = new JButton(lestation[i].getNom());
-				JButton jb = new JButton(new ImageIcon("station.gif"));
-				String nom = lestation[i].getNom();
-				JLabel jl = new JLabel(nom,SwingConstants.CENTER);
-				jb.setBorderPainted(false);
-				jb.setFocusPainted(false);
-				jb.setContentAreaFilled(false);
-				jb.setOpaque(false);
-				jb.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-				jp.setLayout(null);
-				jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),30,30);
-				jp.add(jb);
-				jp.setLayout(null);
-				jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
-				int x = lestation[i].getCoordonnee_station().getX() - 22;
-				int y = lestation[i].getCoordonnee_station().getY() + 60;
-				jl.setBounds(x,y, 100, 15);
-				//g = jp;
-				
-				//g = jp.getGraphics();
-				//g.fillRect(lestation[i].getCoordonnee_station().getX(), lestation[i].getCoordonnee_station().getY(), 0, 0);
-		        //jp.paintComponents(g);	
-				jp.add(jb);
-				jp.add(jl);
-				tableaubutton[i] = jb;
-			}
-			g = jp.getGraphics();
-			for (int i = 0; i < tableaubutton.length; i++) {
-				for(Entry<Station,Integer> e : lestation[i].getTemps_vers_station_voisine().entrySet()){
-					g.drawLine(lestation[i].getCoordonnee_station().getX()+30, lestation[i].getCoordonnee_station().getY()+30,e.getKey().getCoordonnee_station().getX()+30, e.getKey().getCoordonnee_station().getY()+30);
-				}
-			}
-			jp.paintComponents(g);
-		for (int i = 0; i < 15; i++) {
+
+		
+		
+		/*for (int i = 0; i < 15; i++) {
 			JButton jb = new JButton(lestation[i].getNom());
 			jp.setLayout(null);
 			jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
 			jp.add(jb);
 			tableaubutton[i] = jb;
-		}
+		}*/
 		
 	
 		
@@ -197,7 +157,7 @@ public class TerminalMobile {
 					//tableaubutton[i].setBackground(Color.blue);
 				}
 			}
-		}*/
+		}
 
 			jp.addMouseListener(new MouseListener() {
 				public void mouseReleased(MouseEvent e) {}
@@ -207,8 +167,14 @@ public class TerminalMobile {
 				public void mouseClicked(MouseEvent e) {
 					tableaubutton[algo.proche(e.getX(),e.getY(),lestation)].setBackground(Color.blue);
 				}
-			});
-
+			});*/
+		
+		//On affiche les stations dans un Jpanel
+		Affichage affichage = new Affichage(algo);
+		JButton[] tableaubutton= new JButton[15];
+		tableaubutton = affichage.plan(lestation);
+		affichage.paint(affichage.getJp().getGraphics(), tableaubutton, lestation);
+		affichage.stationPlusProche();
 		
 		
 	}
