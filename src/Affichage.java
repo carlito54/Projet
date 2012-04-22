@@ -1,7 +1,10 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
@@ -9,9 +12,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.text.Position;
 
 
 public class Affichage {
@@ -22,7 +30,10 @@ public class Affichage {
 	private JButton[] tableaubutton = new JButton[15];
 	private AlgoRechercheChemin algo;
 	private Station[] lestation = new Station[15];
-
+	private boolean positionner=false;;
+	private ArrayList<Station> chemin = new ArrayList<Station>();
+	private ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
+	private Station depart,arrive;
 	
 	Affichage(AlgoRechercheChemin a){
 		algo = a;
@@ -66,7 +77,6 @@ public class Affichage {
 			int y = lestation[i].getCoordonnee_station().getY() + 60;
 			jl.setBounds(x,y, 100, 15);
 			//g = jp;
-			
 			//g = jp.getGraphics();
 			//g.fillRect(lestation[i].getCoordonnee_station().getX(), lestation[i].getCoordonnee_station().getY(), 0, 0);
 	        //jp.paintComponents(g);	
@@ -104,18 +114,78 @@ public class Affichage {
 		tableaubutton[i].setIcon(new ImageIcon("station_check.gif"));
 		this.paint(jp.getGraphics(), tableaubutton, lestation);
 	}
+
 	
 	public void stationPlusProche(){
+		JOptionPane.showMessageDialog(jp,"Donnez votre position de départ");
+		donnerPositionDepart();
+		JOptionPane.showMessageDialog(jp,"Donnez votre position d'arriver");
+		donnerPositionArrive();
+		
+		algo.Tous_Les_Chemins(chemin, solutions,depart,arrive);
+		for (Station station : algo.cheminPlusRapide(solutions)) {
+			for (int i = 0; i < lestation.length; i++) {
+				if(lestation[i].getNom().compareTo(station.getNom())==0){
+					setStation(i);
+				}
+			}
+		}
+		BarreProgression frame = new BarreProgression();
+        frame.pack();
+        frame.setVisible(true);
+        frame.loop();
+        frame.setVisible(false);
+
+        
+	}
+	
+	public boolean donnerPositionDepart(){
 		jp.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
-				setStation(algo.proche(e.getX(),e.getY(),lestation));
+				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
+				setStation(stationplusproche);
+				depart=lestation[stationplusproche];
+				jp.removeMouseListener(this);
+				positionner=true;
 			}
 		});
+		while(positionner==false);//on attend le clic de la position
+		positionner=false;
+		return positionner;
 	}
+	
+	public boolean donnerPositionArrive(){
+		jp.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
+					setStation(stationplusproche);
+					arrive=lestation[stationplusproche];
+					jp.removeMouseListener(this);
+					positionner=true;
+					if(depart==arrive){
+						JOptionPane.showMessageDialog(jp,"Votre position de départ et d'arriver est trop proche, vous irez plus vite à pied!");
+						effacerStation();
+					}		
+			}
+		});
+		while(positionner==false);//on attend le clic de la position
+		return positionner;
+	}
+	
+	public void effacerStation(){//remettre les station à l'etat initial
+		for (int j = 0; j < tableaubutton.length; j++) {
+			tableaubutton[j].setIcon(new ImageIcon("station.gif"));
+		}
+		this.paint(jp.getGraphics(), tableaubutton, lestation);
 
+	}
 
 }
