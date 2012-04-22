@@ -52,6 +52,18 @@ import java.util.Map.Entry;
 			return res;
 		}
 		
+		public int tempsPlusRapide(ArrayList<ArrayList<Station>> stations){
+			int tempstotal=10000;
+			int temp;
+			for (ArrayList<Station> a : stations) {
+				temp=tempsChemin(a);
+				if(temp<tempstotal){
+					tempstotal=temp;
+				}
+			}
+			return tempstotal;
+		}
+		
 		public int tempsChemin(ArrayList<Station> chemin){
 			int tempstotal=0;
 			int tempsentrestation=0;
@@ -95,6 +107,7 @@ import java.util.Map.Entry;
 	        }
 	        return indicestation;
 	    }
+	    
 }
 			
 			

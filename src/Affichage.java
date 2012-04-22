@@ -4,12 +4,14 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -39,6 +41,7 @@ public class Affichage {
 		algo = a;
 		jf.add(jp);
 		jf.setSize(new Dimension(900,700));
+		jf.setTitle("Terminal Mobile Metro");
 		jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		jf.setLocation(200,50);
 		jf.setVisible(true);
@@ -120,23 +123,30 @@ public class Affichage {
 		JOptionPane.showMessageDialog(jp,"Donnez votre position de départ");
 		donnerPositionDepart();
 		JOptionPane.showMessageDialog(jp,"Donnez votre position d'arriver");
-		donnerPositionArrive();
-		
+		donnerPositionArrive();		
 		algo.Tous_Les_Chemins(chemin, solutions,depart,arrive);
-		for (Station station : algo.cheminPlusRapide(solutions)) {
+		ArrayList<Station> cheminplusrapide=algo.cheminPlusRapide(solutions);
+
+		for (Station station : cheminplusrapide) {
 			for (int i = 0; i < lestation.length; i++) {
 				if(lestation[i].getNom().compareTo(station.getNom())==0){
 					setStation(i);
 				}
 			}
 		}
-		BarreProgression frame = new BarreProgression();
-        frame.pack();
-        frame.setVisible(true);
-        frame.loop();
-        frame.setVisible(false);
-
-        
+		if(depart!=arrive){
+			BarreProgression frame = new BarreProgression();
+	        frame.pack();
+	        frame.setVisible(true);
+	        frame.loop();
+	        frame.setVisible(false);
+			int totalsecondes = algo.tempsPlusRapide(solutions); 
+			int secondes = totalsecondes % 60;
+			int minutes = (totalsecondes / 60) % 60;
+			JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
+						"minutes "+secondes+" secondes \nNombres de changements : "+cheminplusrapide.size());
+		}
+		
 	}
 	
 	public boolean donnerPositionDepart(){
