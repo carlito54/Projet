@@ -53,7 +53,7 @@ import java.util.Map.Entry;
 		}
 		
 		public int tempsPlusRapide(ArrayList<ArrayList<Station>> stations){
-			int tempstotal=10000;
+			int tempstotal=1000000;
 			int temp;
 			for (ArrayList<Station> a : stations) {
 				temp=tempsChemin(a);

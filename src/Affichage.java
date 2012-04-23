@@ -169,7 +169,7 @@ public class Affichage {
 		        frame.setVisible(true);
 		        frame.loop();
 		        frame.setVisible(false);
-				int totalsecondes = algo.tempsPlusRapide(solutions)+premiertemps; 
+				int totalsecondes = algo.tempsPlusRapide(solutions)+premiertemps+temp1.getTempsarret(); 
 				int secondes = totalsecondes % 60;
 				int minutes = (totalsecondes / 60) % 60;
 				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
