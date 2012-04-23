@@ -145,7 +145,7 @@ public class TerminalMobile {
 
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
-		final AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
+		final AlgoRechercheChemin algo= new AlgoRechercheChemin(null);
 		
 		/*algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
 		//le temps le plus rapide entre la station 0 et 10 est de 1010

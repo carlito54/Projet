@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Array;
@@ -137,16 +139,15 @@ public class Affichage {
 		JOptionPane.showMessageDialog(jp,"Donnez votre position de départ");
 		donnerPositionDepart();
 		JOptionPane.showMessageDialog(jp,"Donnez votre position d'arriver");
-		donnerPositionArrive();		
+		donnerPositionArrive();	
 		int option = JOptionPane.showConfirmDialog(null, "Voulez-vous passez par un endroit précis?", "Station intermédiaire", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		
-		if(option==JOptionPane.OK_OPTION){
+		if(option==JOptionPane.OK_OPTION){//si on veut passer par un endroit précis
 			JOptionPane.showMessageDialog(jp,"Donnez votre position par ou passer");
 			donnerPositionAPasser();
 			algo.Tous_Les_Chemins(chemin, solutions,depart,temp1);
 			ArrayList<Station> cheminplusrapide=algo.cheminPlusRapide(solutions);
-			int premiertemps = algo.tempsPlusRapide(solutions); 
 			for (Station station : cheminplusrapide) {
 				for (int i = 0; i < lestation.length; i++) {
 					if(lestation[i].getNom().compareTo(station.getNom())==0){
@@ -154,8 +155,14 @@ public class Affichage {
 					}
 				}
 			}
-			algo.Tous_Les_Chemins(chemin, solutions,temp1,arrive);
-			ArrayList<Station> cheminplusrapide2=algo.cheminPlusRapide(solutions);
+			chemin.clear();
+			solutions.clear();
+			algo.Tous_Les_Chemins(chemin, solutions,temp1,arrive);//2e partie du chemin
+			ArrayList<Station> cheminplusrapide2= new ArrayList<Station>();
+			cheminplusrapide2.add(temp1);//pour le temps du chemin
+			for (Station station : algo.cheminPlusRapide(solutions)) {
+				cheminplusrapide2.add(station);
+			}
 			for (Station station : cheminplusrapide2) {
 				for (int i = 0; i < lestation.length; i++) {
 					if(lestation[i].getNom().compareTo(station.getNom())==0){
@@ -163,24 +170,23 @@ public class Affichage {
 					}
 				}
 			}
-			if(depart!=arrive){
+			//if(depart!=arrive){
 				BarreProgression frame = new BarreProgression();
 		        frame.pack();
 		        frame.setVisible(true);
 		        frame.loop();
 		        frame.setVisible(false);
-				int totalsecondes = algo.tempsPlusRapide(solutions)+premiertemps+temp1.getTempsarret(); 
+				int totalsecondes = algo.tempsChemin(cheminplusrapide2)-temp1.getTempsarret()-arrive.getTempsarret()+algo.tempsChemin(cheminplusrapide); 
 				int secondes = totalsecondes % 60;
 				int minutes = (totalsecondes / 60) % 60;
 				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-							"minutes "+secondes+" secondes \nNombres de changements : "+(cheminplusrapide.size()+cheminplusrapide2.size()));
-			}
+							"minutes "+secondes+" secondes \nNombres de stations : "+(cheminplusrapide.size()+cheminplusrapide2.size()-1));
+			//}
 			
 		}else{
 			algo.Tous_Les_Chemins(chemin, solutions,depart,arrive);
 			
 			ArrayList<Station> cheminplusrapide=algo.cheminPlusRapide(solutions);
-	
 			for (Station station : cheminplusrapide) {
 				for (int i = 0; i < lestation.length; i++) {
 					if(lestation[i].getNom().compareTo(station.getNom())==0){
@@ -188,23 +194,24 @@ public class Affichage {
 					}
 				}
 			}
-			if(depart!=arrive){
+			//if(depart!=arrive){
 				BarreProgression frame = new BarreProgression();
 		        frame.pack();
 		        frame.setVisible(true);
 		        frame.loop();
 		        frame.setVisible(false);
-				int totalsecondes = algo.tempsPlusRapide(solutions); 
+				int totalsecondes = algo.tempsChemin(cheminplusrapide)-arrive.getTempsarret(); 
 				int secondes = totalsecondes % 60;
 				int minutes = (totalsecondes / 60) % 60;
 				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-							"minutes "+secondes+" secondes \nNombres de changements : "+cheminplusrapide.size());
-			}
+							"minutes "+secondes+" secondes \nNombres de stations : "+cheminplusrapide.size());
+			//}
 		}
 		
 	}
 	
 	public boolean donnerPositionDepart(){
+		ajoutListenerDepart();
 		jp.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
@@ -215,6 +222,7 @@ public class Affichage {
 				setStation(stationplusproche);
 				depart=lestation[stationplusproche];
 				jp.removeMouseListener(this);
+				supprimerListenerBouton();
 				positionner=true;
 			}
 		});
@@ -224,6 +232,7 @@ public class Affichage {
 	}
 	
 	public boolean donnerPositionAPasser(){
+		ajoutListenerAPasser();
 		jp.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
@@ -234,6 +243,7 @@ public class Affichage {
 				setStation(stationplusproche);
 				temp1=lestation[stationplusproche];
 				jp.removeMouseListener(this);
+				supprimerListenerBouton();
 				positionner=true;
 			}
 		});
@@ -243,6 +253,7 @@ public class Affichage {
 	}
 	
 	public boolean donnerPositionArrive(){
+		ajoutListenerArrive();
 		jp.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
@@ -253,11 +264,12 @@ public class Affichage {
 					setStation(stationplusproche);
 					arrive=lestation[stationplusproche];
 					jp.removeMouseListener(this);
+					supprimerListenerBouton();
 					positionner=true;
-					if(depart==arrive){
+					/*if(depart==arrive){
 						JOptionPane.showMessageDialog(jp,"Votre position de départ et d'arriver est trop proche, vous irez plus vite à pied!");
 						effacerStation();
-					}		
+					}*/	
 			}
 		});
 		while(positionner==false);//on attend le clic de la position
@@ -271,6 +283,78 @@ public class Affichage {
 		}
 		this.paint(jp.getGraphics(), tableaubutton, lestation);
 
+	}
+	
+	public void ajoutListenerDepart(){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			tableaubutton[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JButton cliquer=(JButton) e.getSource();
+					depart=boutonCliquer(cliquer);
+					cliquer.setIcon(new ImageIcon("station_check.gif"));
+					positionner=true;
+					supprimerListenerBouton();
+					supprimerListenerSouris();
+				}
+			});
+				
+		}
+	}
+	
+	public void ajoutListenerArrive(){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			tableaubutton[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JButton cliquer=(JButton) e.getSource();
+					arrive=boutonCliquer(cliquer);
+					cliquer.setIcon(new ImageIcon("station_check.gif"));
+					positionner=true;
+					supprimerListenerBouton();
+					supprimerListenerSouris();
+				}
+			});
+				
+		}
+	}
+	
+	public void ajoutListenerAPasser(){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			tableaubutton[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JButton cliquer=(JButton) e.getSource();
+					temp1=boutonCliquer(cliquer);
+					cliquer.setIcon(new ImageIcon("station_check.gif"));
+					positionner=true;
+					supprimerListenerBouton();
+					supprimerListenerSouris();
+				}
+			});
+				
+		}
+	}
+	
+	public Station boutonCliquer(JButton clic){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			if(tableaubutton[i].getX()==clic.getX() && tableaubutton[i].getY()==clic.getY()){
+				return lestation[i];	
+			}
+		}
+		return null;
+	}
+	
+	public void supprimerListenerBouton(){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			for (ActionListener act : tableaubutton[i].getActionListeners()) {
+				tableaubutton[i].removeActionListener(act);
+			}
+			
+		}
+	}
+	
+	public void supprimerListenerSouris(){
+		for (MouseListener mouse : jp.getMouseListeners()) {
+			jp.removeMouseListener(mouse);
+		}
 	}
 
 }

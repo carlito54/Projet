@@ -15,14 +15,14 @@ import java.util.Map.Entry;
 
 
 		public void Tous_Les_Chemins(ArrayList<Station> c,ArrayList<ArrayList<Station>> s,Station CoordonneeCou,Station fin){
-			Coordonnee d = depart.getCoordonnee_station();
+			//Coordonnee d = depart.getCoordonnee_station();
 			Coordonnee nouvelle = CoordonneeCou.getCoordonnee_station();
 			Station nouv = CoordonneeCou;
 			Coordonnee finale = fin.getCoordonnee_station();
 			int x=nouvelle.getX();
 			int y=nouvelle.getY();
 			
-			if((d!=nouvelle)&&(nouvelle==finale)){
+			if((nouvelle==finale)){
 					ArrayList<Station> c2=(ArrayList<Station>) c.clone();
 					s.add(c2);
 			} else {				
