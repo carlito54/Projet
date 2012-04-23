@@ -15,14 +15,14 @@ import java.util.Map.Entry;
 
 
 		public void Tous_Les_Chemins(ArrayList<Station> c,ArrayList<ArrayList<Station>> s,Station CoordonneeCou,Station fin){
-			//Coordonnee d = depart.getCoordonnee_station();
+			Coordonnee d = depart.getCoordonnee_station();
 			Coordonnee nouvelle = CoordonneeCou.getCoordonnee_station();
 			Station nouv = CoordonneeCou;
 			Coordonnee finale = fin.getCoordonnee_station();
 			int x=nouvelle.getX();
 			int y=nouvelle.getY();
 			
-			if((nouvelle==finale)){
+			if((d!=finale && nouvelle==finale)){
 					ArrayList<Station> c2=(ArrayList<Station>) c.clone();
 					s.add(c2);
 			} else {				
@@ -50,6 +50,35 @@ import java.util.Map.Entry;
 				}
 			}
 			return res;
+		}
+		
+		public ArrayList<Station> cheminMoinsChangement(ArrayList<ArrayList<Station>> stations){
+			ArrayList<Station> res = new ArrayList<Station>();
+			int nbchangement=10000;
+			for (ArrayList<Station> a : stations) {
+				if(nbLignes(a)<nbchangement){
+					nbchangement=nbLignes(a);
+					res=a;
+				}
+			}
+			return res;
+		}
+		
+		public int nbLignes(ArrayList<Station> chemin){
+			int nbchangement=0;
+			for (int i = 0; i < chemin.size(); i++) {
+				if(i>=2){
+					int ligne=chemin.get(i).getLigne();
+					int lignechange = chemin.get(i-2).getLigne();
+					if(ligne!=4 && ligne!=5 && ligne!=6 
+							&& lignechange!=4 && lignechange!=5 && lignechange!=6){
+						if(ligne!=lignechange){
+							nbchangement++;
+						}
+					}
+				}
+			} 
+			return nbchangement;
 		}
 		
 		public int tempsPlusRapide(ArrayList<ArrayList<Station>> stations){
