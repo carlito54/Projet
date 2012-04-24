@@ -119,9 +119,13 @@ public class test{
 		chemin.add(lestation[11]);
 
 		System.out.println("changement "+algo.nbLignes(chemin));
-		for (Station s : algo.cheminMoinsChangement(solutions)) {
-			//System.out.println(s.getNom());
-		}	
+		for (ArrayList<Station> a : solutions) {
+			System.out.println("SOLUTION : ");
+			for (Station s : a) {
+				System.out.println(s.getNom());
+			}	
+		}
+		
 		
 		
 	}

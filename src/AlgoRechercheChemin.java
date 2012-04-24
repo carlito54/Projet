@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 			} else {				
 				for(Entry<Station,Integer> e : nouv.getTemps_vers_station_voisine().entrySet()){
 					Station courante=e.getKey();
-							if(!c.contains(courante)){
+							if(!c.contains(courante)&&!c.contains(depart)){
 								nouv=courante;
 								c.add(courante);
 								Tous_Les_Chemins(c,s,courante,fin);
