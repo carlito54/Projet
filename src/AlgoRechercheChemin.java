@@ -23,7 +23,12 @@ import java.util.Map.Entry;
 			int y=nouvelle.getY();
 			
 			if((d!=finale && nouvelle==finale)){
-					ArrayList<Station> c2=(ArrayList<Station>) c.clone();
+				//(ArrayList<Station>) c.clone()
+					ArrayList<Station> c2=new ArrayList<Station>();
+					c2.add(depart);
+					for (Station station : c) {
+						c2.add(station);
+					}
 					s.add(c2);
 			} else {				
 				for(Entry<Station,Integer> e : nouv.getTemps_vers_station_voisine().entrySet()){

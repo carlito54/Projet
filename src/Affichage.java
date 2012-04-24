@@ -45,7 +45,7 @@ public class Affichage {
 	private ArrayList<Station> chemin = new ArrayList<Station>();
 	private ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
 	private Station depart,arrive,temp1; //temp1 et temp2 les fonctions par ou passer
-	private ArrayList<Station> cheminplusrapide,cheminmoinschangement;
+	private ArrayList<Station> cheminplusrapide,cheminmoinschangement,cheminplusrapide2,cheminmoinschangement2;
 	
 	Affichage(AlgoRechercheChemin a){
 		algo = a;
@@ -155,7 +155,12 @@ public class Affichage {
 			donnerPositionAPasser();
 			algo.depart=depart;
 			algo.Tous_Les_Chemins(chemin, solutions,depart,temp1);
-			ArrayList<Station> cheminplusrapide=algo.cheminPlusRapide(solutions);
+			cheminplusrapide=algo.cheminPlusRapide(solutions);
+			cheminmoinschangement=algo.cheminMoinsChangement(solutions);
+
+			if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
+				cheminmoinschangement=cheminplusrapide;
+			
 			for (Station station : cheminplusrapide) {
 				for (int i = 0; i < lestation.length; i++) {
 					if(lestation[i].getNom().compareTo(station.getNom())==0){
@@ -167,7 +172,12 @@ public class Affichage {
 			solutions.clear();
 			algo.depart=temp1;
 			algo.Tous_Les_Chemins(chemin, solutions,temp1,arrive);//2e partie du chemin
-			ArrayList<Station> cheminplusrapide2= new ArrayList<Station>();
+			cheminplusrapide2= new ArrayList<Station>();
+			cheminmoinschangement2=algo.cheminMoinsChangement(solutions);
+
+			if(algo.nbLignes(cheminmoinschangement2)==algo.nbLignes(cheminplusrapide2))
+				cheminmoinschangement2=cheminplusrapide2;
+			
 			cheminplusrapide2.add(temp1);//pour le temps du chemin
 			for (Station station : algo.cheminPlusRapide(solutions)) {
 				cheminplusrapide2.add(station);
@@ -189,8 +199,8 @@ public class Affichage {
 				int secondes = totalsecondes % 60;
 				int minutes = (totalsecondes / 60) % 60;
 				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-							"minutes "+secondes+" secondes \nNombres de stations : "+(cheminplusrapide.size()+cheminplusrapide2.size()-1));
-			//}
+							"minutes "+secondes+" secondes \nNombres de changement(s) : "+(algo.nbLignes(cheminplusrapide2)+algo.nbLignes(cheminplusrapide)));
+				//}
 			
 		}else{
 			algo.depart=depart;
@@ -198,6 +208,10 @@ public class Affichage {
 			
 			cheminplusrapide=algo.cheminPlusRapide(solutions);
 			cheminmoinschangement=algo.cheminMoinsChangement(solutions);
+
+			if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
+				cheminmoinschangement=cheminplusrapide;
+			
 			
 			for (Station station : cheminplusrapide) {
 				for (int i = 0; i < lestation.length; i++) {
@@ -216,25 +230,27 @@ public class Affichage {
 				int secondes = totalsecondes % 60;
 				int minutes = (totalsecondes / 60) % 60;
 				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-							"minutes "+secondes+" secondes \nNombres de stations : "+cheminplusrapide.size());
+							"minutes "+secondes+" secondes \nNombres de changement(s) : "+algo.nbLignes(cheminplusrapide));
 			//}
-		}
-		jradio.setEnabled(true);
-		jradio1.setEnabled(true);
-		jradio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			effacerStation();
-			departbutton.setIcon(new ImageIcon("station_check.gif"));
-			changementChemin(cheminplusrapide);
-			}
-		});
-		jradio1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				effacerStation();
-				departbutton.setIcon(new ImageIcon("station_check.gif"));
-				changementChemin(cheminmoinschangement);
-			}
-		});
+				jradio.setEnabled(true);
+				jradio1.setEnabled(true);
+				jradio.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+					effacerStation();
+					//departbutton.setIcon(new ImageIcon("station_check.gif"));
+					changementChemin(cheminplusrapide);
+					}
+				});
+				jradio1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						effacerStation();
+						//departbutton.setIcon(new ImageIcon("station_check.gif"));
+						changementChemin(cheminmoinschangement);
+					}
+				});
+				
+		}//fin else
+		
 		
 	}
 	
@@ -400,8 +416,9 @@ public class Affichage {
 			int secondes = totalsecondes % 60;
 			int minutes = (totalsecondes / 60) % 60;
 			JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-						"minutes "+secondes+" secondes \nNombres de stations : "+chemin.size());
+						"minutes "+secondes+" secondes \nNombres de changement(s) : "+algo.nbLignes(chemin));
 		//}
 	}
+	
 
 }
