@@ -1,33 +1,11 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.PopupMenu;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.Map.Entry;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.Popup;
-import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
-import javax.swing.text.TabExpander;
 
 
-public class TerminalMobile {
+
+public class test{
 
 
 	public static void main(String[] args) {
@@ -128,53 +106,26 @@ public class TerminalMobile {
 		voisin14.put(lestation[5], 230);
 		voisin14.put(lestation[8], 310);
 		lestation[14].setTemps_vers_station_voisine(voisin14);
-		
 
-		
-		
-		/*for (int i = 0; i < 15; i++) {
-			JButton jb = new JButton(lestation[i].getNom());
-			jp.setLayout(null);
-			jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),60,60);
-			jp.add(jb);
-			tableaubutton[i] = jb;
-		}*/
 		
 	
 		
 
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
-		final AlgoRechercheChemin algo= new AlgoRechercheChemin(null);
-		
-		/*algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[10]);
-		//le temps le plus rapide entre la station 0 et 10 est de 1010
-		
-		for (Station station : algo.cheminPlusRapide(solutions)) {
-			//System.out.println("res"+station.getNom());
-			for (int i = 0; i < tableaubutton.length; i++) {
-				if(tableaubutton[i].getText().compareTo(station.getNom())==0){
-					//tableaubutton[i].setBackground(Color.blue);
-				}
-			}
-		}
+		final AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[12]);
+		algo.Tous_Les_Chemins(chemin,solutions,lestation[12],lestation[11]);
+		chemin.add(lestation[12]);
+		chemin.add(lestation[11]);
 
-			jp.addMouseListener(new MouseListener() {
-				public void mouseReleased(MouseEvent e) {}
-				public void mousePressed(MouseEvent e) {}
-				public void mouseExited(MouseEvent e) {}
-				public void mouseEntered(MouseEvent e) {}
-				public void mouseClicked(MouseEvent e) {
-					tableaubutton[algo.proche(e.getX(),e.getY(),lestation)].setBackground(Color.blue);
-				}
-			});*/
+		System.out.println("changement "+algo.nbLignes(chemin));
+		for (ArrayList<Station> a : solutions) {
+			System.out.println("SOLUTION : ");
+			for (Station s : a) {
+				System.out.println(s.getNom());
+			}	
+		}
 		
-		//On affiche les stations dans un Jpanel
-		Affichage affichage = new Affichage(algo);
-		JButton[] tableaubutton= new JButton[15];
-		tableaubutton = affichage.plan(lestation);
-		affichage.paint(affichage.getJp().getGraphics(), tableaubutton, lestation);
-		affichage.stationPlusProche();
 		
 		
 	}
