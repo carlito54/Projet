@@ -44,7 +44,7 @@ public class Affichage {
 	private boolean positionner=false;;
 	private ArrayList<Station> chemin = new ArrayList<Station>();
 	private ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
-	private Station depart,arrive,temp1,panne; //temp1 et temp2 les fonctions par ou passer
+	private Station depart,arrive,temp1,panne,origine_voie,fin_voie; //temp1 et temp2 les fonctions par ou passer
 	private ArrayList<Station> cheminplusrapide,cheminmoinschangement,cheminplusrapide2,cheminmoinschangement2;
 	
 	Affichage(AlgoRechercheChemin a){
@@ -160,13 +160,24 @@ public class Affichage {
 			donnerPositionAPasser();
 		}
 		
-		int option2 = JOptionPane.showConfirmDialog(null, "Voulez-vous signaler une panne?", "Station en panne", 
+		int option2 = JOptionPane.showConfirmDialog(null, "Voulez-vous signaler une station en panne?", "Station en panne", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		
 		if(option2==JOptionPane.OK_OPTION){
 			JOptionPane.showMessageDialog(jp,"Sur quelle station signaler une panne ?");
 			donnerPositionPanne();
+		}
+		
+		int option3 = JOptionPane.showConfirmDialog(null, "Voulez-vous signaler une voie en panne?", "Voie en panne", 
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if(option2==JOptionPane.OK_OPTION){
+			JOptionPane.showMessageDialog(jp,"Choisissez la station d'origine de la voie");
+			donnerPositionOrigineVoie();
+			JOptionPane.showMessageDialog(jp,"Choisissez la station d'arrivée de la voie");
+			donnerPositionFinVoie();
+			origine_voie.mettreVoieEnPanne(fin_voie);
 		}
 		
 		if(option==JOptionPane.OK_OPTION){//si on veut passer par un endroit précis
@@ -381,6 +392,56 @@ public class Affichage {
 				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
 					setStation(stationplusproche);
 					arrive=lestation[stationplusproche];
+					jp.removeMouseListener(this);
+					supprimerListenerBouton();
+					positionner=true;
+					/*if(depart==arrive){
+						JOptionPane.showMessageDialog(jp,"Votre position de départ et d'arriver est trop proche, vous irez plus vite à pied!");
+						effacerStation();
+					}*/	
+			}
+		});
+		while(positionner==false);//on attend le clic de la position
+		positionner=false;
+		return positionner;
+	}
+	
+	public boolean donnerPositionOrigineVoie(){
+		ajoutListenerArrive();
+		jp.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
+					setStation(stationplusproche);
+					origine_voie=lestation[stationplusproche];
+					jp.removeMouseListener(this);
+					supprimerListenerBouton();
+					positionner=true;
+					/*if(depart==arrive){
+						JOptionPane.showMessageDialog(jp,"Votre position de départ et d'arriver est trop proche, vous irez plus vite à pied!");
+						effacerStation();
+					}*/	
+			}
+		});
+		while(positionner==false);//on attend le clic de la position
+		positionner=false;
+		return positionner;
+	}
+	
+	public boolean donnerPositionFinVoie(){
+		ajoutListenerArrive();
+		jp.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
+					setStation(stationplusproche);
+					fin_voie=lestation[stationplusproche];
 					jp.removeMouseListener(this);
 					supprimerListenerBouton();
 					positionner=true;

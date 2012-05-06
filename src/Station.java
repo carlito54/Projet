@@ -67,5 +67,12 @@ public class Station {
 	public void setCoordonnee_station(Coordonnee coordonneeStation) {
 		coordonnee_station = coordonneeStation;
 	}
+	
+	//met la ligne entre la voie actuelle et la voie en parametre en panne (à -1)
+	public void mettreVoieEnPanne(Station s) {
+		if (this.temps_vers_station_voisine.containsKey(s)) {
+			this.temps_vers_station_voisine.put(s, -1);
+		}
+	}
 		
 }
