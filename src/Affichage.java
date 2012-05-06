@@ -145,7 +145,11 @@ public class Affichage {
 		tableaubutton[i].setIcon(new ImageIcon("station_panne.gif"));
 		this.paint(jp.getGraphics(), tableaubutton, lestation);
 	}
-
+	
+	public void setStationVoie(int i){
+		tableaubutton[i].setIcon(new ImageIcon("station_voie.gif"));
+		this.paint(jp.getGraphics(), tableaubutton, lestation);
+	}
 	
 	public void stationPlusProche(){
 		JOptionPane.showMessageDialog(jp,"Donnez votre position de départ");
@@ -188,8 +192,7 @@ public class Affichage {
 			ArrayList<ArrayList<Station>> temp = (ArrayList<ArrayList<Station>>) solutions.clone();
 			
 			for (ArrayList<Station> l : temp) {
-				algo.aVoieEnPanne(l);
-				if (l.contains(panne)) {
+				if (l.contains(panne) || algo.aVoieEnPanne(l)) {
 					solutions.remove(l);
 				}
 			}
@@ -215,8 +218,7 @@ public class Affichage {
 				temp = (ArrayList<ArrayList<Station>>) solutions.clone();
 				
 				for (ArrayList<Station> l : temp) {
-					algo.aVoieEnPanne(l);
-					if (l.contains(panne)) {
+					if (l.contains(panne) || algo.aVoieEnPanne(l)) {
 						solutions.remove(l);
 					}
 				}
@@ -260,8 +262,7 @@ public class Affichage {
 			ArrayList<ArrayList<Station>> temp = (ArrayList<ArrayList<Station>>) solutions.clone();
 			
 			for (ArrayList<Station> l : temp) {
-				algo.aVoieEnPanne(l);
-				if (l.contains(panne)) {
+				if (l.contains(panne) || algo.aVoieEnPanne(l)) {
 					solutions.remove(l);
 				}
 			}
@@ -522,7 +523,7 @@ public class Affichage {
 				public void actionPerformed(ActionEvent e) {
 					JButton cliquer=(JButton) e.getSource();
 					origine_voie=boutonCliquer(cliquer);
-					cliquer.setIcon(new ImageIcon("station_panne.gif"));
+					cliquer.setIcon(new ImageIcon("station_voie.gif"));
 					positionner=true;
 					supprimerListenerBouton();
 					supprimerListenerSouris();
@@ -538,7 +539,7 @@ public class Affichage {
 				public void actionPerformed(ActionEvent e) {
 					JButton cliquer=(JButton) e.getSource();
 					fin_voie=boutonCliquer(cliquer);
-					cliquer.setIcon(new ImageIcon("station_panne.gif"));
+					cliquer.setIcon(new ImageIcon("station_voie.gif"));
 					positionner=true;
 					supprimerListenerBouton();
 					supprimerListenerSouris();
@@ -591,11 +592,17 @@ public class Affichage {
 	public void changementChemin(ArrayList<Station> chemin){
 		for (Station station : chemin) {
 			for (int i = 0; i < lestation.length; i++) {
-				if(lestation[i].getNom().compareTo(station.getNom())==0){
+				if(lestation[i].getNom().compareTo(station.getNom())==0 && lestation[i].getNom().compareTo(origine_voie.getNom())!=0 && lestation[i].getNom().compareTo(fin_voie.getNom())!=0){
 					setStation(i);
 				}
 				if (lestation[i].getNom().compareTo(panne.getNom())==0) {
 					setStationPanne(i);
+				}
+				if (lestation[i].getNom().compareTo(origine_voie.getNom())==0) {
+					setStationVoie(i);
+				}
+				if (lestation[i].getNom().compareTo(fin_voie.getNom())==0) {
+					setStationVoie(i);
 				}
 			}
 		}
