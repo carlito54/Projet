@@ -442,7 +442,7 @@ public class Affichage {
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
 				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
-					setStation(stationplusproche);
+					setStationVoie(stationplusproche);
 					origine_voie=lestation[stationplusproche];
 					jp.removeMouseListener(this);
 					supprimerListenerBouton();
@@ -467,7 +467,7 @@ public class Affichage {
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
 				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
-					setStation(stationplusproche);
+					setStationVoie(stationplusproche);
 					fin_voie=lestation[stationplusproche];
 					jp.removeMouseListener(this);
 					supprimerListenerBouton();
