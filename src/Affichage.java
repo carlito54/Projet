@@ -498,8 +498,10 @@ public class Affichage {
 				if(lestation[i].getNom().compareTo(station.getNom())==0){
 					setStation(i);
 				}
-				if (lestation[i].getNom().compareTo(panne.getNom())==0) {
-					setStationPanne(i);
+				if (panne != null) {
+					if (lestation[i].getNom().compareTo(panne.getNom())==0) {
+						setStationPanne(i);
+					}
 				}
 			}
 		}
