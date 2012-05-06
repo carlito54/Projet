@@ -172,7 +172,7 @@ public class Affichage {
 		int option3 = JOptionPane.showConfirmDialog(null, "Voulez-vous signaler une voie en panne?", "Voie en panne", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-		if(option2==JOptionPane.OK_OPTION){
+		if(option3==JOptionPane.OK_OPTION){
 			JOptionPane.showMessageDialog(jp,"Choisissez la station d'origine de la voie");
 			donnerPositionOrigineVoie();
 			JOptionPane.showMessageDialog(jp,"Choisissez la station d'arrivée de la voie");
@@ -188,6 +188,7 @@ public class Affichage {
 			ArrayList<ArrayList<Station>> temp = (ArrayList<ArrayList<Station>>) solutions.clone();
 			
 			for (ArrayList<Station> l : temp) {
+				algo.aVoieEnPanne(l);
 				if (l.contains(panne)) {
 					solutions.remove(l);
 				}
@@ -214,6 +215,7 @@ public class Affichage {
 				temp = (ArrayList<ArrayList<Station>>) solutions.clone();
 				
 				for (ArrayList<Station> l : temp) {
+					algo.aVoieEnPanne(l);
 					if (l.contains(panne)) {
 						solutions.remove(l);
 					}
@@ -258,6 +260,7 @@ public class Affichage {
 			ArrayList<ArrayList<Station>> temp = (ArrayList<ArrayList<Station>>) solutions.clone();
 			
 			for (ArrayList<Station> l : temp) {
+				algo.aVoieEnPanne(l);
 				if (l.contains(panne)) {
 					solutions.remove(l);
 				}
@@ -407,7 +410,7 @@ public class Affichage {
 	}
 	
 	public boolean donnerPositionOrigineVoie(){
-		ajoutListenerArrive();
+		ajoutListenerOrigineVoie();
 		jp.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
@@ -432,7 +435,7 @@ public class Affichage {
 	}
 	
 	public boolean donnerPositionFinVoie(){
-		ajoutListenerArrive();
+		ajoutListenerFinVoie();
 		jp.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
@@ -503,6 +506,38 @@ public class Affichage {
 				public void actionPerformed(ActionEvent e) {
 					JButton cliquer=(JButton) e.getSource();
 					panne=boutonCliquer(cliquer);
+					cliquer.setIcon(new ImageIcon("station_panne.gif"));
+					positionner=true;
+					supprimerListenerBouton();
+					supprimerListenerSouris();
+				}
+			});
+				
+		}
+	}
+	
+	public void ajoutListenerOrigineVoie(){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			tableaubutton[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JButton cliquer=(JButton) e.getSource();
+					origine_voie=boutonCliquer(cliquer);
+					cliquer.setIcon(new ImageIcon("station_panne.gif"));
+					positionner=true;
+					supprimerListenerBouton();
+					supprimerListenerSouris();
+				}
+			});
+				
+		}
+	}
+	
+	public void ajoutListenerFinVoie(){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			tableaubutton[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JButton cliquer=(JButton) e.getSource();
+					fin_voie=boutonCliquer(cliquer);
 					cliquer.setIcon(new ImageIcon("station_panne.gif"));
 					positionner=true;
 					supprimerListenerBouton();

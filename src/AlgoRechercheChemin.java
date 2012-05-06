@@ -116,13 +116,14 @@ import java.util.Map.Entry;
 		
 		public boolean aVoieEnPanne(ArrayList<Station> chemin){
 			boolean sup = false;
-			int count = 1;
+			int count = 0;
 			Station temp=null;
 			for (Station station : chemin) {
 				if (count != chemin.size()) {
 					if(tempsEntreStation(temp,station) == -1){
 						sup = true;
 					}
+					temp=station;
 				}
 				count ++;
 			}

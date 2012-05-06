@@ -37,15 +37,12 @@ public class AlgoRechercheCheminTest {
 		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[2]);
 		ArrayList<ArrayList<Station>> test = new ArrayList<ArrayList<Station>>();
 		ArrayList<Station> chemin1 = new ArrayList<Station>();
-		chemin1.add(lestation[1]);
 		chemin1.add(lestation[0]);
+		chemin1.add(lestation[1]);
 		chemin1.add(lestation[2]);
 		ArrayList<Station> chemin2 = new ArrayList<Station>();
-		chemin2.add(lestation[1]);
+		chemin2.add(lestation[0]);
 		chemin2.add(lestation[2]);
-		ArrayList<Station> chemin3 = new ArrayList<Station>();
-		chemin3.add(lestation[2]);
-		test.add(chemin3);
 		test.add(chemin2);
 		test.add(chemin1);		
 		assertEquals(test, solutions);		
@@ -80,6 +77,7 @@ public class AlgoRechercheCheminTest {
 		AlgoRechercheChemin algo= new AlgoRechercheChemin(lestation[0]);
 		algo.Tous_Les_Chemins(chemin, solutions,lestation[0],lestation[2]);
 		ArrayList<Station> chemin2 = new ArrayList<Station>();
+		chemin2.add(lestation[0]);
 		chemin2.add(lestation[2]);	
 		assertEquals(chemin2, algo.cheminPlusRapide(solutions));	
 	}
@@ -119,6 +117,32 @@ public class AlgoRechercheCheminTest {
 		voisin0.put(fin,100);
 		debut.setTemps_vers_station_voisine(voisin0);
 		assertEquals(100, a.tempsEntreStation(debut, fin));
+	}
+	
+	@Test
+	public void aVoieEnPanne(){
+		
+		Station[] lestation = new Station[3];		
+		lestation[0] = new Station(30,"Rome",null,new Coordonnee(150,450),1);
+		lestation[1] = new Station(40,"Courcelles",null,new Coordonnee(250,370),1);
+		lestation[2] = new Station(50,"Neuilly",null,new Coordonnee(325,450),1);
+		
+		HashMap<Station, Integer> voisin0 = new HashMap<Station, Integer>();
+		HashMap<Station, Integer> voisin1 = new HashMap<Station, Integer>();
+		HashMap<Station, Integer> voisin2 = new HashMap<Station, Integer>();
+		
+		voisin0.put(lestation[1],120);
+		lestation[0].setTemps_vers_station_voisine(voisin0);
+		
+		voisin1.put(lestation[2], -1);
+		lestation[1].setTemps_vers_station_voisine(voisin1);
+		
+		ArrayList<Station> chemin = new ArrayList<Station>();
+		chemin.add(lestation[0]);
+		chemin.add(lestation[1]);
+		chemin.add(lestation[2]);	
+		AlgoRechercheChemin a = new AlgoRechercheChemin(null);
+		assertEquals(true, a.aVoieEnPanne(chemin));
 	}
 
 }
