@@ -206,7 +206,13 @@ public class Affichage {
 				for (Station station : cheminplusrapide) {
 					for (int i = 0; i < lestation.length; i++) {
 						if(lestation[i].getNom().compareTo(station.getNom())==0){
-							setStation(i);
+							if (origine_voie != null && fin_voie != null) {
+								if (lestation[i].getNom().compareTo(origine_voie.getNom())!=0 && lestation[i].getNom().compareTo(fin_voie.getNom())!=0){
+									setStation(i);									
+								}
+							} else {
+								setStation(i);
+							}
 						}
 					}
 				}
@@ -215,43 +221,54 @@ public class Affichage {
 				algo.depart=temp1;
 				algo.Tous_Les_Chemins(chemin, solutions,temp1,arrive);//2e partie du chemin
 								
-				temp = (ArrayList<ArrayList<Station>>) solutions.clone();
+				ArrayList<ArrayList<Station>> temp2 = (ArrayList<ArrayList<Station>>) solutions.clone();
 				
-				for (ArrayList<Station> l : temp) {
+				for (ArrayList<Station> l : temp2) {
 					if (l.contains(panne) || algo.aVoieEnPanne(l)) {
 						solutions.remove(l);
 					}
 				}
 				
-				cheminplusrapide2= new ArrayList<Station>();
-				cheminmoinschangement2=algo.cheminMoinsChangement(solutions);
-	
-				if(algo.nbLignes(cheminmoinschangement2)==algo.nbLignes(cheminplusrapide2))
-					cheminmoinschangement2=cheminplusrapide2;
+				if (solutions.size() != 0) {
 				
-				cheminplusrapide2.add(temp1);//pour le temps du chemin
-				for (Station station : algo.cheminPlusRapide(solutions)) {
-					cheminplusrapide2.add(station);
-				}
-				for (Station station : cheminplusrapide2) {
-					for (int i = 0; i < lestation.length; i++) {
-						if(lestation[i].getNom().compareTo(station.getNom())==0){
-							setStation(i);
+					cheminplusrapide2= new ArrayList<Station>();
+					cheminmoinschangement2=algo.cheminMoinsChangement(solutions);
+									
+					if(algo.nbLignes(cheminmoinschangement2)==algo.nbLignes(cheminplusrapide2))
+						cheminmoinschangement2=cheminplusrapide2;
+					
+					cheminplusrapide2.add(temp1);//pour le temps du chemin
+					for (Station station : algo.cheminPlusRapide(solutions)) {
+						cheminplusrapide2.add(station);
+					}
+					for (Station station : cheminplusrapide2) {
+						for (int i = 0; i < lestation.length; i++) {
+							if(lestation[i].getNom().compareTo(station.getNom())==0){
+								if (origine_voie != null && fin_voie != null) {
+									if (lestation[i].getNom().compareTo(origine_voie.getNom())!=0 && lestation[i].getNom().compareTo(fin_voie.getNom())!=0){
+										setStation(i);									
+									}
+								} else {
+									setStation(i);
+								}
+							}
 						}
 					}
+					//if(depart!=arrive){
+						BarreProgression frame = new BarreProgression();
+				        frame.pack();
+				        frame.setVisible(true);
+				        frame.loop();
+				        frame.setVisible(false);
+						int totalsecondes = algo.tempsChemin(cheminplusrapide2)-temp1.getTempsarret()-arrive.getTempsarret()+algo.tempsChemin(cheminplusrapide); 
+						int secondes = totalsecondes % 60;
+						int minutes = (totalsecondes / 60) % 60;
+						JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
+									"minutes "+secondes+" secondes \nNombres de changement(s) : "+(algo.nbLignes(cheminplusrapide2)+algo.nbLignes(cheminplusrapide)));
+						//}
+				} else {
+					JOptionPane.showMessageDialog(jp, "Il n'y a pas de solutions");						
 				}
-				//if(depart!=arrive){
-					BarreProgression frame = new BarreProgression();
-			        frame.pack();
-			        frame.setVisible(true);
-			        frame.loop();
-			        frame.setVisible(false);
-					int totalsecondes = algo.tempsChemin(cheminplusrapide2)-temp1.getTempsarret()-arrive.getTempsarret()+algo.tempsChemin(cheminplusrapide); 
-					int secondes = totalsecondes % 60;
-					int minutes = (totalsecondes / 60) % 60;
-					JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-								"minutes "+secondes+" secondes \nNombres de changement(s) : "+(algo.nbLignes(cheminplusrapide2)+algo.nbLignes(cheminplusrapide)));
-					//}
 			} else {
 				JOptionPane.showMessageDialog(jp, "Il n'y a pas de solutions");				
 			}
@@ -279,7 +296,13 @@ public class Affichage {
 				for (Station station : cheminplusrapide) {
 					for (int i = 0; i < lestation.length; i++) {
 						if(lestation[i].getNom().compareTo(station.getNom())==0){
-							setStation(i);
+							if (origine_voie != null && fin_voie != null) {
+								if (lestation[i].getNom().compareTo(origine_voie.getNom())!=0 && lestation[i].getNom().compareTo(fin_voie.getNom())!=0){
+									setStation(i);									
+								}
+							} else {
+								setStation(i);
+							}
 						}
 					}
 				}
@@ -592,17 +615,29 @@ public class Affichage {
 	public void changementChemin(ArrayList<Station> chemin){
 		for (Station station : chemin) {
 			for (int i = 0; i < lestation.length; i++) {
-				if(lestation[i].getNom().compareTo(station.getNom())==0 && lestation[i].getNom().compareTo(origine_voie.getNom())!=0 && lestation[i].getNom().compareTo(fin_voie.getNom())!=0){
-					setStation(i);
+				if (origine_voie != null && fin_voie != null) {
+					if(lestation[i].getNom().compareTo(station.getNom())==0 && lestation[i].getNom().compareTo(origine_voie.getNom())!=0 && lestation[i].getNom().compareTo(fin_voie.getNom())!=0){
+						setStation(i);
+					}
+				} else {
+					if(lestation[i].getNom().compareTo(station.getNom())==0){
+						setStation(i);
+					}					
 				}
-				if (lestation[i].getNom().compareTo(panne.getNom())==0) {
-					setStationPanne(i);
+				if (panne != null) {
+					if (lestation[i].getNom().compareTo(panne.getNom())==0) {
+						setStationPanne(i);
+					}
 				}
-				if (lestation[i].getNom().compareTo(origine_voie.getNom())==0) {
-					setStationVoie(i);
+				if (origine_voie != null) {
+					if (lestation[i].getNom().compareTo(origine_voie.getNom())==0) {
+						setStationVoie(i);
+					}
 				}
-				if (lestation[i].getNom().compareTo(fin_voie.getNom())==0) {
-					setStationVoie(i);
+				if (fin_voie != null) {
+					if (lestation[i].getNom().compareTo(fin_voie.getNom())==0) {
+						setStationVoie(i);
+					}
 				}
 			}
 		}

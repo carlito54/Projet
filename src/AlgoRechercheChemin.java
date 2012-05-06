@@ -120,7 +120,7 @@ import java.util.Map.Entry;
 			Station temp=null;
 			for (Station station : chemin) {
 				if (count != chemin.size()) {
-					if(tempsEntreStation(temp,station) == -1){
+					if(tempsEntreStation(temp,station) == -1 || tempsEntreStation(station, temp) == -1){
 						sup = true;
 					}
 					temp=station;
