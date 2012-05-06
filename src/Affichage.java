@@ -36,7 +36,6 @@ public class Affichage {
 
 	private JFrame jf = new JFrame();
 	JRadioButton jradio,jradio1;
-	private JButton jpanne;
 	private JPanel jp=new JPanel(),radio = new JPanel();
 	private JButton[] tableaubutton = new JButton[15];
 	private JButton departbutton;
@@ -63,17 +62,14 @@ public class Affichage {
 		ButtonGroup group = new ButtonGroup();
 		jradio = new JRadioButton("Chemin le plus rapide");
 		jradio1 = new JRadioButton("Moins de changement de lignes");
-		jpanne = new JButton("Signaler une panne");
 		group.add(jradio);
 		group.add(jradio1);
 		jradio.setSelected(true);
 		radio.add(jradio);
 		radio.add(jradio1);
-		radio.add(jpanne);
 		jf.add(radio,BorderLayout.NORTH);
 		jradio.setEnabled(false);
 		jradio1.setEnabled(false);
-		jpanne.setEnabled(false);
 	}
 	
 	public void paint(Graphics g, JButton[] tableaubutton, Station[] lestation){
@@ -159,178 +155,154 @@ public class Affichage {
 		int option = JOptionPane.showConfirmDialog(null, "Voulez-vous passez par un endroit précis?", "Station intermédiaire", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		
-		if(option==JOptionPane.OK_OPTION){//si on veut passer par un endroit précis
+		if(option==JOptionPane.OK_OPTION){
 			JOptionPane.showMessageDialog(jp,"Donnez votre position par ou passer");
 			donnerPositionAPasser();
+		}
+		
+		int option2 = JOptionPane.showConfirmDialog(null, "Voulez-vous signaler une panne?", "Station en panne", 
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		
+		if(option2==JOptionPane.OK_OPTION){
+			JOptionPane.showMessageDialog(jp,"Sur quelle station signaler une panne ?");
+			donnerPositionPanne();
+		}
+		
+		if(option==JOptionPane.OK_OPTION){//si on veut passer par un endroit précis
+			
 			algo.depart=depart;
 			algo.Tous_Les_Chemins(chemin, solutions,depart,temp1);
+			
+			ArrayList<ArrayList<Station>> temp = (ArrayList<ArrayList<Station>>) solutions.clone();
+			
+			for (ArrayList<Station> l : temp) {
+				if (l.contains(panne)) {
+					solutions.remove(l);
+				}
+			}
 			cheminplusrapide=algo.cheminPlusRapide(solutions);
 			cheminmoinschangement=algo.cheminMoinsChangement(solutions);
-
-			if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
-				cheminmoinschangement=cheminplusrapide;
 			
-			for (Station station : cheminplusrapide) {
-				for (int i = 0; i < lestation.length; i++) {
-					if(lestation[i].getNom().compareTo(station.getNom())==0){
-						setStation(i);
+			if (cheminplusrapide.size() != 0) {
+				if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
+					cheminmoinschangement=cheminplusrapide;
+				
+				for (Station station : cheminplusrapide) {
+					for (int i = 0; i < lestation.length; i++) {
+						if(lestation[i].getNom().compareTo(station.getNom())==0){
+							setStation(i);
+						}
 					}
 				}
-			}
-			chemin.clear();
-			solutions.clear();
-			algo.depart=temp1;
-			algo.Tous_Les_Chemins(chemin, solutions,temp1,arrive);//2e partie du chemin
-			cheminplusrapide2= new ArrayList<Station>();
-			cheminmoinschangement2=algo.cheminMoinsChangement(solutions);
-
-			if(algo.nbLignes(cheminmoinschangement2)==algo.nbLignes(cheminplusrapide2))
-				cheminmoinschangement2=cheminplusrapide2;
-			
-			cheminplusrapide2.add(temp1);//pour le temps du chemin
-			for (Station station : algo.cheminPlusRapide(solutions)) {
-				cheminplusrapide2.add(station);
-			}
-			for (Station station : cheminplusrapide2) {
-				for (int i = 0; i < lestation.length; i++) {
-					if(lestation[i].getNom().compareTo(station.getNom())==0){
-						setStation(i);
+				chemin.clear();
+				solutions.clear();
+				algo.depart=temp1;
+				algo.Tous_Les_Chemins(chemin, solutions,temp1,arrive);//2e partie du chemin
+								
+				temp = (ArrayList<ArrayList<Station>>) solutions.clone();
+				
+				for (ArrayList<Station> l : temp) {
+					if (l.contains(panne)) {
+						solutions.remove(l);
 					}
 				}
+				
+				cheminplusrapide2= new ArrayList<Station>();
+				cheminmoinschangement2=algo.cheminMoinsChangement(solutions);
+	
+				if(algo.nbLignes(cheminmoinschangement2)==algo.nbLignes(cheminplusrapide2))
+					cheminmoinschangement2=cheminplusrapide2;
+				
+				cheminplusrapide2.add(temp1);//pour le temps du chemin
+				for (Station station : algo.cheminPlusRapide(solutions)) {
+					cheminplusrapide2.add(station);
+				}
+				for (Station station : cheminplusrapide2) {
+					for (int i = 0; i < lestation.length; i++) {
+						if(lestation[i].getNom().compareTo(station.getNom())==0){
+							setStation(i);
+						}
+					}
+				}
+				//if(depart!=arrive){
+					BarreProgression frame = new BarreProgression();
+			        frame.pack();
+			        frame.setVisible(true);
+			        frame.loop();
+			        frame.setVisible(false);
+					int totalsecondes = algo.tempsChemin(cheminplusrapide2)-temp1.getTempsarret()-arrive.getTempsarret()+algo.tempsChemin(cheminplusrapide); 
+					int secondes = totalsecondes % 60;
+					int minutes = (totalsecondes / 60) % 60;
+					JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
+								"minutes "+secondes+" secondes \nNombres de changement(s) : "+(algo.nbLignes(cheminplusrapide2)+algo.nbLignes(cheminplusrapide)));
+					//}
+			} else {
+				JOptionPane.showMessageDialog(jp, "Il n'y a pas de solutions");				
 			}
-			//if(depart!=arrive){
-				BarreProgression frame = new BarreProgression();
-		        frame.pack();
-		        frame.setVisible(true);
-		        frame.loop();
-		        frame.setVisible(false);
-				int totalsecondes = algo.tempsChemin(cheminplusrapide2)-temp1.getTempsarret()-arrive.getTempsarret()+algo.tempsChemin(cheminplusrapide); 
-				int secondes = totalsecondes % 60;
-				int minutes = (totalsecondes / 60) % 60;
-				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-							"minutes "+secondes+" secondes \nNombres de changement(s) : "+(algo.nbLignes(cheminplusrapide2)+algo.nbLignes(cheminplusrapide)));
-				//}
-			
 		}else{
 			algo.depart=depart;
 			algo.Tous_Les_Chemins(chemin, solutions,depart,arrive);
+
+			ArrayList<ArrayList<Station>> temp = (ArrayList<ArrayList<Station>>) solutions.clone();
+			
+			for (ArrayList<Station> l : temp) {
+				if (l.contains(panne)) {
+					solutions.remove(l);
+				}
+			}
 			
 			cheminplusrapide=algo.cheminPlusRapide(solutions);
 			cheminmoinschangement=algo.cheminMoinsChangement(solutions);
-
-			if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
-				cheminmoinschangement=cheminplusrapide;
 			
-			
-			for (Station station : cheminplusrapide) {
-				for (int i = 0; i < lestation.length; i++) {
-					if(lestation[i].getNom().compareTo(station.getNom())==0){
-						setStation(i);
+			if (cheminplusrapide.size() != 0) {
+	
+				if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
+					cheminmoinschangement=cheminplusrapide;
+				
+				
+				for (Station station : cheminplusrapide) {
+					for (int i = 0; i < lestation.length; i++) {
+						if(lestation[i].getNom().compareTo(station.getNom())==0){
+							setStation(i);
+						}
 					}
 				}
-			}
-			//if(depart!=arrive){
-				BarreProgression frame = new BarreProgression();
-		        frame.pack();
-		        frame.setVisible(true);
-		        frame.loop();
-		        frame.setVisible(false);
-				int totalsecondes = algo.tempsChemin(cheminplusrapide)-arrive.getTempsarret(); 
-				int secondes = totalsecondes % 60;
-				int minutes = (totalsecondes / 60) % 60;
-				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-							"minutes "+secondes+" secondes \nNombres de changement(s) : "+algo.nbLignes(cheminplusrapide));
-			//}
-				jradio.setEnabled(true);
-				jradio1.setEnabled(true);
-				jradio.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-					effacerStation();
-					//departbutton.setIcon(new ImageIcon("station_check.gif"));
-					changementChemin(cheminplusrapide);
-					}
-				});
-				jradio1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
+				//if(depart!=arrive){
+					BarreProgression frame = new BarreProgression();
+			        frame.pack();
+			        frame.setVisible(true);
+			        frame.loop();
+			        frame.setVisible(false);
+					int totalsecondes = algo.tempsChemin(cheminplusrapide)-arrive.getTempsarret(); 
+					int secondes = totalsecondes % 60;
+					int minutes = (totalsecondes / 60) % 60;
+					JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
+								"minutes "+secondes+" secondes \nNombres de changement(s) : "+algo.nbLignes(cheminplusrapide));
+				//}
+					jradio.setEnabled(true);
+					jradio1.setEnabled(true);
+					jradio.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
 						effacerStation();
 						//departbutton.setIcon(new ImageIcon("station_check.gif"));
-						changementChemin(cheminmoinschangement);
-					}
-				});
-				
-				jpanne.setEnabled(true);
-				jpanne.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						choisirStationEnPanne();
-					}
-				});
-				
+						changementChemin(cheminplusrapide);
+						}
+					});
+					jradio1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							effacerStation();
+							//departbutton.setIcon(new ImageIcon("station_check.gif"));
+							changementChemin(cheminmoinschangement);
+						}
+					});
+					
+			} else {
+				JOptionPane.showMessageDialog(jp, "Il n'y a pas de solutions");				
+			}
 		}//fin else
 		
 		
-	}
-	
-	public void supprimerStation() {
-		algo.depart=depart;
-		algo.Tous_Les_Chemins(chemin, solutions,depart,arrive);
-		
-		for (ArrayList<Station> l : solutions) {
-			if (l.contains(panne)) {
-				solutions.remove(l);
-			}
-		}
-		
-		cheminplusrapide=algo.cheminPlusRapide(solutions);
-		cheminmoinschangement=algo.cheminMoinsChangement(solutions);
-
-		if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
-			cheminmoinschangement=cheminplusrapide;
-		
-		if (cheminplusrapide != null) {
-			for (Station station : cheminplusrapide) {
-				for (int i = 0; i < lestation.length; i++) {
-					if(lestation[i].getNom().compareTo(station.getNom())==0){
-						setStation(i);
-					}
-				}
-			}
-			//if(depart!=arrive){
-				BarreProgression frame = new BarreProgression();
-		        frame.pack();
-		        frame.setVisible(true);
-		        frame.loop();
-		        frame.setVisible(false);
-				int totalsecondes = algo.tempsChemin(cheminplusrapide)-arrive.getTempsarret(); 
-				int secondes = totalsecondes % 60;
-				int minutes = (totalsecondes / 60) % 60;
-				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
-							"minutes "+secondes+" secondes \nNombres de changement(s) : "+algo.nbLignes(cheminplusrapide));
-			//}
-				jradio.setEnabled(true);
-				jradio1.setEnabled(true);
-				jradio.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-					effacerStation();
-					//departbutton.setIcon(new ImageIcon("station_check.gif"));
-					changementChemin(cheminplusrapide);
-					}
-				});
-				jradio1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						effacerStation();
-						//departbutton.setIcon(new ImageIcon("station_check.gif"));
-						changementChemin(cheminmoinschangement);
-					}
-				});
-		} else {
-			JOptionPane.showMessageDialog(jp, "Il n'y a pas de solutions");
-		}
-	}
-	
-	public void choisirStationEnPanne() {
-		JOptionPane.showMessageDialog(jp,"Choisissez sur quelle station signaler la panne");
-		donnerPositionPanne();
-		supprimerStation();		
 	}
 	
 	public boolean donnerPositionDepart(){
@@ -525,6 +497,9 @@ public class Affichage {
 			for (int i = 0; i < lestation.length; i++) {
 				if(lestation[i].getNom().compareTo(station.getNom())==0){
 					setStation(i);
+				}
+				if (lestation[i].getNom().compareTo(panne.getNom())==0) {
+					setStationPanne(i);
 				}
 			}
 		}
