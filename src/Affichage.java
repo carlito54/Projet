@@ -36,6 +36,7 @@ public class Affichage {
 
 	private JFrame jf = new JFrame();
 	JRadioButton jradio,jradio1;
+	private JButton jpanne;
 	private JPanel jp=new JPanel(),radio = new JPanel();
 	private JButton[] tableaubutton = new JButton[15];
 	private JButton departbutton;
@@ -44,7 +45,7 @@ public class Affichage {
 	private boolean positionner=false;;
 	private ArrayList<Station> chemin = new ArrayList<Station>();
 	private ArrayList<ArrayList<Station>> solutions = new ArrayList<ArrayList<Station>>();
-	private Station depart,arrive,temp1; //temp1 et temp2 les fonctions par ou passer
+	private Station depart,arrive,temp1,panne; //temp1 et temp2 les fonctions par ou passer
 	private ArrayList<Station> cheminplusrapide,cheminmoinschangement,cheminplusrapide2,cheminmoinschangement2;
 	
 	Affichage(AlgoRechercheChemin a){
@@ -62,14 +63,17 @@ public class Affichage {
 		ButtonGroup group = new ButtonGroup();
 		jradio = new JRadioButton("Chemin le plus rapide");
 		jradio1 = new JRadioButton("Moins de changement de lignes");
+		jpanne = new JButton("Signaler une panne");
 		group.add(jradio);
 		group.add(jradio1);
 		jradio.setSelected(true);
 		radio.add(jradio);
 		radio.add(jradio1);
+		radio.add(jpanne);
 		jf.add(radio,BorderLayout.NORTH);
 		jradio.setEnabled(false);
 		jradio1.setEnabled(false);
+		jpanne.setEnabled(false);
 	}
 	
 	public void paint(Graphics g, JButton[] tableaubutton, Station[] lestation){
@@ -138,6 +142,11 @@ public class Affichage {
 	
 	public void setStation(int i){
 		tableaubutton[i].setIcon(new ImageIcon("station_check.gif"));
+		this.paint(jp.getGraphics(), tableaubutton, lestation);
+	}
+	
+	public void setStationPanne(int i){
+		tableaubutton[i].setIcon(new ImageIcon("station_panne.gif"));
 		this.paint(jp.getGraphics(), tableaubutton, lestation);
 	}
 
@@ -249,9 +258,79 @@ public class Affichage {
 					}
 				});
 				
+				jpanne.setEnabled(true);
+				jpanne.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						choisirStationEnPanne();
+					}
+				});
+				
 		}//fin else
 		
 		
+	}
+	
+	public void supprimerStation() {
+		algo.depart=depart;
+		algo.Tous_Les_Chemins(chemin, solutions,depart,arrive);
+		
+		for (ArrayList<Station> l : solutions) {
+			if (l.contains(panne)) {
+				solutions.remove(l);
+			}
+		}
+		
+		cheminplusrapide=algo.cheminPlusRapide(solutions);
+		cheminmoinschangement=algo.cheminMoinsChangement(solutions);
+
+		if(algo.nbLignes(cheminmoinschangement)==algo.nbLignes(cheminplusrapide))
+			cheminmoinschangement=cheminplusrapide;
+		
+		if (cheminplusrapide != null) {
+			for (Station station : cheminplusrapide) {
+				for (int i = 0; i < lestation.length; i++) {
+					if(lestation[i].getNom().compareTo(station.getNom())==0){
+						setStation(i);
+					}
+				}
+			}
+			//if(depart!=arrive){
+				BarreProgression frame = new BarreProgression();
+		        frame.pack();
+		        frame.setVisible(true);
+		        frame.loop();
+		        frame.setVisible(false);
+				int totalsecondes = algo.tempsChemin(cheminplusrapide)-arrive.getTempsarret(); 
+				int secondes = totalsecondes % 60;
+				int minutes = (totalsecondes / 60) % 60;
+				JOptionPane.showMessageDialog(jp,"Voila le chemin à prendre \nTemps estimé : "+minutes+" "+
+							"minutes "+secondes+" secondes \nNombres de changement(s) : "+algo.nbLignes(cheminplusrapide));
+			//}
+				jradio.setEnabled(true);
+				jradio1.setEnabled(true);
+				jradio.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+					effacerStation();
+					//departbutton.setIcon(new ImageIcon("station_check.gif"));
+					changementChemin(cheminplusrapide);
+					}
+				});
+				jradio1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						effacerStation();
+						//departbutton.setIcon(new ImageIcon("station_check.gif"));
+						changementChemin(cheminmoinschangement);
+					}
+				});
+		} else {
+			JOptionPane.showMessageDialog(jp, "Il n'y a pas de solutions");
+		}
+	}
+	
+	public void choisirStationEnPanne() {
+		JOptionPane.showMessageDialog(jp,"Choisissez sur quelle station signaler la panne");
+		donnerPositionPanne();
+		supprimerStation();		
 	}
 	
 	public boolean donnerPositionDepart(){
@@ -266,6 +345,28 @@ public class Affichage {
 				departbutton = tableaubutton[stationplusproche];
 				setStation(stationplusproche);
 				depart=lestation[stationplusproche];
+				jp.removeMouseListener(this);
+				supprimerListenerBouton();
+				positionner=true;
+			}
+		});
+		while(positionner==false);//on attend le clic de la position
+		positionner=false;
+		return positionner;
+	}
+
+	
+	public boolean donnerPositionPanne(){
+		ajoutListenerPanne();
+		jp.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				int stationplusproche=algo.proche(e.getX(),e.getY(),lestation);
+				setStationPanne(stationplusproche);
+				panne = lestation[stationplusproche];
 				jp.removeMouseListener(this);
 				supprimerListenerBouton();
 				positionner=true;
@@ -354,6 +455,22 @@ public class Affichage {
 					JButton cliquer=(JButton) e.getSource();
 					arrive=boutonCliquer(cliquer);
 					cliquer.setIcon(new ImageIcon("station_check.gif"));
+					positionner=true;
+					supprimerListenerBouton();
+					supprimerListenerSouris();
+				}
+			});
+				
+		}
+	}
+	
+	public void ajoutListenerPanne(){
+		for (int i = 0; i < tableaubutton.length; i++) {
+			tableaubutton[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JButton cliquer=(JButton) e.getSource();
+					panne=boutonCliquer(cliquer);
+					cliquer.setIcon(new ImageIcon("station_panne.gif"));
 					positionner=true;
 					supprimerListenerBouton();
 					supprimerListenerSouris();
