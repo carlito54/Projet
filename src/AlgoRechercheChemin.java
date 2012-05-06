@@ -114,6 +114,22 @@ import java.util.Map.Entry;
 			return (tempstotal+tempsentrestation);
 		}
 		
+		public boolean aVoieEnPanne(ArrayList<Station> chemin){
+			boolean sup = false;
+			int count = 0;
+			Station temp=null;
+			for (Station station : chemin) {
+				if (count != chemin.size()) {
+					if(tempsEntreStation(temp,station) == -1 || tempsEntreStation(station, temp) == -1){
+						sup = true;
+					}
+					temp=station;
+				}
+				count ++;
+			}
+			return sup;
+		}
+		
 		//retourne le temps mis entre 2 stations
 		public int tempsEntreStation(Station debut,Station fin){
 			if (debut==null || fin==null)return 0;
