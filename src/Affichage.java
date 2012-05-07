@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -6,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.ImageObserver;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -37,7 +39,7 @@ public class Affichage {
 	private JFrame jf = new JFrame();
 	JRadioButton jradio,jradio1;
 	private JPanel jp=new JPanel(),radio = new JPanel();
-	private JButton[] tableaubutton = new JButton[15];
+	private RoundButton[] tableaubutton = new RoundButton[15];
 	private JButton departbutton;
 	private AlgoRechercheChemin algo;
 	private Station[] lestation = new Station[15];
@@ -72,27 +74,26 @@ public class Affichage {
 		jradio1.setEnabled(false);
 	}
 	
-	public void paint(Graphics g, JButton[] tableaubutton, Station[] lestation){
+	public void paint(Graphics g, RoundButton[] tableaubutton, Station[] lestation){
 		for (int i = 0; i < tableaubutton.length; i++) {
 			for(Entry<Station,Integer> e : lestation[i].getTemps_vers_station_voisine().entrySet()){
-				g.drawLine(lestation[i].getCoordonnee_station().getX()+30, lestation[i].getCoordonnee_station().getY()+30,e.getKey().getCoordonnee_station().getX()+30, e.getKey().getCoordonnee_station().getY()+30);
+				g.drawLine((lestation[i].getCoordonnee_station().getX()+(tableaubutton[i].getWidth()/2)), lestation[i].getCoordonnee_station().getY()+(tableaubutton[i].getHeight()/2),e.getKey().getCoordonnee_station().getX()+(tableaubutton[i].getWidth()/2), e.getKey().getCoordonnee_station().getY()+(tableaubutton[i].getHeight()/2));
 			}
 		}
 		jp.paintComponents(g);
 		
 	}
 	
-	public JButton[] plan(Station[] lestation){
+	public RoundButton[] plan(Station[] lestation){
 		this.lestation = lestation;
 		for (int i = 0; i < 15; i++) {
 			//JButton jb = new JButton(lestation[i].getNom());
-			JButton jb = new JButton(new ImageIcon("station.gif"));
+			RoundButton jb = new RoundButton();
+			jb.setIcon(new ImageIcon("station.gif"));
+	
+			
 			String nom = lestation[i].getNom();
 			JLabel jl = new JLabel(nom,SwingConstants.CENTER);
-			jb.setBorderPainted(false);
-			jb.setFocusPainted(false);
-			jb.setContentAreaFilled(false);
-			jb.setOpaque(false);
 			jb.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 			jp.setLayout(null);
 			jb.setBounds(lestation[i].getCoordonnee_station().getX(),lestation[i].getCoordonnee_station().getY(),30,30);
@@ -114,11 +115,7 @@ public class Affichage {
 		return tableaubutton;
 		
 	}
-	
-	public void chargerLigne(){
-		
-		
-	}
+
 
 	public JFrame getJf() {
 		return jf;
@@ -153,33 +150,40 @@ public class Affichage {
 	
 	public void stationPlusProche(){
 		JOptionPane.showMessageDialog(jp,"Donnez votre position de départ");
+		paint(jp.getGraphics(),tableaubutton,lestation);
 		donnerPositionDepart();
 		JOptionPane.showMessageDialog(jp,"Donnez votre position d'arriver");
+		paint(jp.getGraphics(),tableaubutton,lestation);
 		donnerPositionArrive();	
 		int option = JOptionPane.showConfirmDialog(null, "Voulez-vous passez par un endroit précis?", "Station intermédiaire", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-		
+		paint(jp.getGraphics(),tableaubutton,lestation);
 		if(option==JOptionPane.OK_OPTION){
 			JOptionPane.showMessageDialog(jp,"Donnez votre position par ou passer");
+			paint(jp.getGraphics(),tableaubutton,lestation);
 			donnerPositionAPasser();
 		}
 		
 		int option2 = JOptionPane.showConfirmDialog(null, "Voulez-vous signaler une station en panne?", "Station en panne", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-		
+		paint(jp.getGraphics(),tableaubutton,lestation);
 		if(option2==JOptionPane.OK_OPTION){
 			JOptionPane.showMessageDialog(jp,"Sur quelle station signaler une panne ?");
+			paint(jp.getGraphics(),tableaubutton,lestation);
 			donnerPositionPanne();
 		}
 		
 		int option3 = JOptionPane.showConfirmDialog(null, "Voulez-vous signaler une voie en panne?", "Voie en panne", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		paint(jp.getGraphics(),tableaubutton,lestation);
 
 		if(option3==JOptionPane.OK_OPTION){
 			JOptionPane.showMessageDialog(jp,"Choisissez la station d'origine de la voie");
+			paint(jp.getGraphics(),tableaubutton,lestation);
+
 			donnerPositionOrigineVoie();
 			JOptionPane.showMessageDialog(jp,"Choisissez la station d'arrivée de la voie");
+			paint(jp.getGraphics(),tableaubutton,lestation);
 			donnerPositionFinVoie();
 			origine_voie.mettreVoieEnPanne(fin_voie);
 		}

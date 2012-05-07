@@ -171,7 +171,7 @@ public class TerminalMobile {
 		
 		//On affiche les stations dans un Jpanel
 		Affichage affichage = new Affichage(algo);
-		JButton[] tableaubutton= new JButton[15];
+		RoundButton[] tableaubutton= new RoundButton[15];
 		tableaubutton = affichage.plan(lestation);
 		affichage.paint(affichage.getJp().getGraphics(), tableaubutton, lestation);
 		affichage.stationPlusProche();
