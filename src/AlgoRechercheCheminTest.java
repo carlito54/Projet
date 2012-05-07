@@ -132,10 +132,16 @@ public class AlgoRechercheCheminTest {
 		HashMap<Station, Integer> voisin2 = new HashMap<Station, Integer>();
 		
 		voisin0.put(lestation[1],120);
+		voisin0.put(lestation[2],20);
 		lestation[0].setTemps_vers_station_voisine(voisin0);
 		
 		voisin1.put(lestation[2], -1);
+		voisin1.put(lestation[0], 1);
 		lestation[1].setTemps_vers_station_voisine(voisin1);
+		
+		voisin2.put(lestation[0], 12);
+		voisin2.put(lestation[1], 24);
+		lestation[2].setTemps_vers_station_voisine(voisin2);
 		
 		ArrayList<Station> chemin = new ArrayList<Station>();
 		chemin.add(lestation[0]);
